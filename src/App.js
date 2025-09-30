@@ -16,6 +16,16 @@ function App() {
   const [results, setResults] = useState(null);
   const [comparisonResults, setComparisonResults] = useState(null);
   const [nextId, setNextId] = useState(5);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+
+  // Handle window resize
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   // Set favicon on mount
   useEffect(() => {
@@ -336,7 +346,7 @@ function App() {
       background: 'rgba(255, 255, 255, 0.95)',
       backdropFilter: 'blur(10px)',
       borderBottom: '1px solid rgba(255, 255, 255, 0.2)',
-      padding: '1rem 2rem',
+      padding: isMobile ? '1rem' : '1rem 2rem',
       position: 'sticky',
       top: 0,
       zIndex: 100,
@@ -347,7 +357,9 @@ function App() {
       margin: '0 auto',
       display: 'flex',
       justifyContent: 'space-between',
-      alignItems: 'center'
+      alignItems: 'center',
+      flexWrap: isMobile ? 'wrap' : 'nowrap',
+      gap: isMobile ? '1rem' : '0'
     },
     logo: {
       display: 'flex',
@@ -363,7 +375,7 @@ function App() {
       justifyContent: 'center'
     },
     logoText: {
-      fontSize: '1.5rem',
+      fontSize: isMobile ? '1.25rem' : '1.5rem',
       fontWeight: 900,
       background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
       WebkitBackgroundClip: 'text',
@@ -374,22 +386,23 @@ function App() {
     headerActions: {
       display: 'flex',
       alignItems: 'center',
-      gap: '1rem'
+      gap: '1rem',
+      width: isMobile ? '100%' : 'auto'
     },
     heroSection: {
       maxWidth: '1400px',
-      margin: '2rem auto',
-      padding: '0 2rem',
+      margin: isMobile ? '1rem auto' : '2rem auto',
+      padding: isMobile ? '0 1rem' : '0 2rem',
       textAlign: 'center',
       color: 'white'
     },
     mainContent: {
       maxWidth: '1400px',
-      margin: '2rem auto',
-      padding: '0 2rem',
+      margin: isMobile ? '1rem auto' : '2rem auto',
+      padding: isMobile ? '0 1rem' : '0 2rem',
       display: 'grid',
-      gridTemplateColumns: '1fr 320px',
-      gap: '2rem'
+      gridTemplateColumns: isMobile ? '1fr' : '1fr 320px',
+      gap: isMobile ? '1rem' : '2rem'
     },
     mainPanel: {
       display: 'flex',
@@ -397,19 +410,19 @@ function App() {
       gap: '1.5rem'
     },
     sidePanel: {
-      display: 'flex',
+      display: isMobile ? 'none' : 'flex',
       flexDirection: 'column',
       gap: '1.5rem'
     },
     card: {
       background: 'white',
       borderRadius: '20px',
-      padding: '1.5rem',
+      padding: isMobile ? '1rem' : '1.5rem',
       boxShadow: '0 10px 40px rgba(0, 0, 0, 0.1)'
     },
     statsGrid: {
       display: 'grid',
-      gridTemplateColumns: 'repeat(3, 1fr)',
+      gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)',
       gap: '1rem',
       marginBottom: '1.5rem'
     },
@@ -423,7 +436,7 @@ function App() {
       background: 'linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%)',
       border: '2px solid #e9ecef',
       borderRadius: '16px',
-      padding: '1.5rem',
+      padding: isMobile ? '1rem' : '1.5rem',
       marginBottom: '1rem',
       position: 'relative',
       transition: 'all 0.3s ease'
@@ -458,16 +471,17 @@ function App() {
       background: 'rgba(255, 255, 255, 0.95)',
       backdropFilter: 'blur(10px)',
       borderTop: '1px solid rgba(255, 255, 255, 0.2)',
-      padding: '2rem',
+      padding: isMobile ? '1.5rem 1rem' : '2rem',
       marginTop: '4rem'
     },
     footerContent: {
       maxWidth: '1400px',
       margin: '0 auto',
       display: 'grid',
-      gridTemplateColumns: '1fr 2fr 1fr',
+      gridTemplateColumns: isMobile ? '1fr' : '1fr 2fr 1fr',
       gap: '2rem',
-      alignItems: 'center'
+      alignItems: 'center',
+      textAlign: isMobile ? 'center' : 'left'
     }
   };
 
@@ -491,6 +505,7 @@ function App() {
             <button
               onClick={handleCalculate}
               style={{
+                width: isMobile ? '100%' : 'auto',
                 padding: '0.75rem 1.5rem',
                 background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
                 color: 'white',
@@ -500,6 +515,7 @@ function App() {
                 cursor: 'pointer',
                 display: 'flex',
                 alignItems: 'center',
+                justifyContent: 'center',
                 gap: '0.5rem'
               }}
             >
@@ -512,22 +528,29 @@ function App() {
 
       {/* Hero Section */}
       <div style={styles.heroSection}>
-        <h2 style={{ fontSize: '2.5rem', fontWeight: '800', marginBottom: '1rem' }}>
+        <h2 style={{ fontSize: isMobile ? '1.75rem' : '2.5rem', fontWeight: '800', marginBottom: '1rem' }}>
           Calculate Your Path to Financial Freedom
         </h2>
-        <p style={{ fontSize: '1.2rem', opacity: 0.95, marginBottom: '1.5rem' }}>
+        <p style={{ fontSize: isMobile ? '1rem' : '1.2rem', opacity: 0.95, marginBottom: '1.5rem' }}>
           Compare proven strategies and see exactly when you'll be debt-free
         </p>
-        <div style={{ display: 'flex', gap: '2rem', justifyContent: 'center', fontSize: '0.9rem', opacity: 0.9 }}>
-          <span style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+        <div style={{ 
+          display: 'flex', 
+          flexDirection: isMobile ? 'column' : 'row',
+          gap: isMobile ? '0.5rem' : '2rem', 
+          justifyContent: 'center', 
+          fontSize: '0.9rem', 
+          opacity: 0.9 
+        }}>
+          <span style={{ display: 'flex', alignItems: 'center', justifyContent: isMobile ? 'center' : 'flex-start', gap: '0.5rem' }}>
             <Shield size={16} />
             100% Private
           </span>
-          <span style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          <span style={{ display: 'flex', alignItems: 'center', justifyContent: isMobile ? 'center' : 'flex-start', gap: '0.5rem' }}>
             <DollarSign size={16} />
             Forever Free
           </span>
-          <span style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          <span style={{ display: 'flex', alignItems: 'center', justifyContent: isMobile ? 'center' : 'flex-start', gap: '0.5rem' }}>
             <Calculator size={16} />
             No Account Required
           </span>
@@ -540,7 +563,7 @@ function App() {
         <div style={styles.mainPanel}>
           {/* Quick Stats */}
           <div style={styles.card}>
-            <h2 style={{ marginTop: 0, marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <h2 style={{ marginTop: 0, marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: isMobile ? '1.25rem' : '1.5rem' }}>
               <Target size={24} color="#667eea" />
               Your Debt Overview
             </h2>
@@ -569,7 +592,7 @@ function App() {
             {/* Debt List */}
             <div style={{ marginTop: '1.5rem' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-                <h3 style={{ margin: 0 }}>Your Debts</h3>
+                <h3 style={{ margin: 0, fontSize: isMobile ? '1.125rem' : '1.25rem' }}>Your Debts</h3>
                 <button
                   onClick={clearAllData}
                   style={{
@@ -586,7 +609,7 @@ function App() {
                   }}
                 >
                   <RefreshCw size={14} />
-                  Reset All
+                  {!isMobile && 'Reset All'}
                 </button>
               </div>
 
@@ -623,7 +646,7 @@ function App() {
                     </button>
                   </div>
                   
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem' }}>
+                  <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem' }}>
                     <div>
                       <label style={{ 
                         fontSize: '0.75rem', 
@@ -676,7 +699,10 @@ function App() {
                       <input
                         type="number"
                         value={debt.balance || ''}
-                        onChange={(e) => updateDebt(debt.id, 'balance', parseFloat(e.target.value) || 0)}
+                        onChange={(e) => {
+                          const value = e.target.value;
+                          updateDebt(debt.id, 'balance', value === '' ? 0 : parseFloat(value));
+                        }}
                         placeholder="5000"
                         style={{
                           width: '100%',
@@ -713,7 +739,10 @@ function App() {
                       <input
                         type="number"
                         value={debt.rate || ''}
-                        onChange={(e) => updateDebt(debt.id, 'rate', parseFloat(e.target.value) || 0)}
+                        onChange={(e) => {
+                          const value = e.target.value;
+                          updateDebt(debt.id, 'rate', value === '' ? 0 : parseFloat(value));
+                        }}
                         placeholder="18.99"
                         step="0.01"
                         style={{
@@ -751,7 +780,10 @@ function App() {
                       <input
                         type="number"
                         value={debt.minPayment || ''}
-                        onChange={(e) => updateDebt(debt.id, 'minPayment', parseFloat(e.target.value) || 0)}
+                        onChange={(e) => {
+                          const value = e.target.value;
+                          updateDebt(debt.id, 'minPayment', value === '' ? 0 : parseFloat(value));
+                        }}
                         placeholder="150"
                         style={{
                           width: '100%',
@@ -810,12 +842,12 @@ function App() {
 
           {/* Strategy Selection */}
           <div style={styles.card}>
-            <h3 style={{ marginTop: 0, marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <h3 style={{ marginTop: 0, marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: isMobile ? '1.125rem' : '1.25rem' }}>
               <Zap size={20} color="#facc15" />
               Payoff Strategy
             </h3>
             
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '0.75rem' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(2, 1fr)', gap: '0.75rem' }}>
               {[
                 { id: 'snowball', icon: Snowflake, label: 'Snowball', desc: 'Lowest balance first (psychological wins)' },
                 { id: 'avalanche', icon: Mountain, label: 'Avalanche', desc: 'Highest rate first (saves most money)' }
@@ -850,8 +882,15 @@ function App() {
               <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.5rem' }}>
                 <input
                   type="number"
-                  value={extraPayment}
-                  onChange={(e) => setExtraPayment(parseFloat(e.target.value) || 0)}
+                  value={extraPayment || ''}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    if (value === '') {
+                      setExtraPayment(0);
+                    } else {
+                      setExtraPayment(parseFloat(value));
+                    }
+                  }}
                   placeholder="0"
                   style={{
                     flex: 1,
@@ -877,7 +916,7 @@ function App() {
                   }}
                 >
                   <TrendingDown size={18} />
-                  Calculate
+                  {isMobile ? 'Go' : 'Calculate'}
                 </button>
               </div>
               
@@ -917,14 +956,14 @@ function App() {
           {/* Strategy Comparison */}
           {comparisonResults && (
             <div style={styles.card}>
-              <h3 style={{ marginTop: 0, marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <h3 style={{ marginTop: 0, marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: isMobile ? '1.125rem' : '1.25rem' }}>
                 <TrendingUp size={20} color="#10b981" />
                 Strategy Comparison
               </h3>
               
               <div style={{ 
                 display: 'grid', 
-                gridTemplateColumns: 'repeat(2, 1fr)', 
+                gridTemplateColumns: isMobile ? '1fr' : 'repeat(2, 1fr)', 
                 gap: '1rem',
                 marginBottom: '1rem'
               }}>
@@ -991,52 +1030,54 @@ function App() {
           {results && (
             <div style={styles.card}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-                <h3 style={{ margin: 0 }}>Your Debt Freedom Plan</h3>
-                <div style={{ display: 'flex', gap: '0.5rem' }}>
-                  <button
-                    onClick={exportPDF}
-                    style={{
-                      padding: '0.5rem 1rem',
-                      background: 'white',
-                      border: '1px solid #dee2e6',
-                      borderRadius: '6px',
-                      color: '#495057',
-                      cursor: 'pointer',
-                      fontSize: '0.875rem',
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '0.5rem'
-                    }}
-                  >
-                    <FileText size={14} />
-                    PDF
-                  </button>
-                  <button
-                    onClick={shareResults}
-                    style={{
-                      padding: '0.5rem 1rem',
-                      background: 'white',
-                      border: '1px solid #dee2e6',
-                      borderRadius: '6px',
-                      color: '#495057',
-                      cursor: 'pointer',
-                      fontSize: '0.875rem',
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '0.5rem'
-                    }}
-                  >
-                    <Share2 size={14} />
-                    Share
-                  </button>
-                </div>
+                <h3 style={{ margin: 0, fontSize: isMobile ? '1.125rem' : '1.25rem' }}>Your Debt Freedom Plan</h3>
+                {!isMobile && (
+                  <div style={{ display: 'flex', gap: '0.5rem' }}>
+                    <button
+                      onClick={exportPDF}
+                      style={{
+                        padding: '0.5rem 1rem',
+                        background: 'white',
+                        border: '1px solid #dee2e6',
+                        borderRadius: '6px',
+                        color: '#495057',
+                        cursor: 'pointer',
+                        fontSize: '0.875rem',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '0.5rem'
+                      }}
+                    >
+                      <FileText size={14} />
+                      PDF
+                    </button>
+                    <button
+                      onClick={shareResults}
+                      style={{
+                        padding: '0.5rem 1rem',
+                        background: 'white',
+                        border: '1px solid #dee2e6',
+                        borderRadius: '6px',
+                        color: '#495057',
+                        cursor: 'pointer',
+                        fontSize: '0.875rem',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '0.5rem'
+                      }}
+                    >
+                      <Share2 size={14} />
+                      Share
+                    </button>
+                  </div>
+                )}
               </div>
               
               <div>
                 {/* Summary Stats */}
                 <div style={{ 
                   display: 'grid', 
-                  gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', 
+                  gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fit, minmax(150px, 1fr))', 
                   gap: '1rem',
                   marginBottom: '1.5rem'
                 }}>
@@ -1139,7 +1180,7 @@ function App() {
                     {results.schedule.map((item, index) => (
                       <div key={item.name} style={{
                         display: 'grid',
-                        gridTemplateColumns: '30px 2fr 1fr 1fr 1fr',
+                        gridTemplateColumns: isMobile ? '30px 1fr' : '30px 2fr 1fr 1fr 1fr',
                         gap: '0.75rem',
                         padding: '0.75rem',
                         background: index === 0 ? 'linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(16, 185, 129, 0.05) 100%)' : '#f8f9fa',
@@ -1162,18 +1203,65 @@ function App() {
                         }}>
                           {item.order}
                         </div>
-                        <div style={{ fontWeight: '600', color: '#212529' }}>{item.name}</div>
-                        <div style={{ color: '#6c757d' }}>${Math.round(item.originalBalance).toLocaleString()}</div>
-                        <div style={{ color: '#f59e0b', fontWeight: '600' }}>{item.rate}%</div>
-                        <div style={{ 
-                          color: item.interestPaid > 1000 ? '#dc2626' : '#16a34a',
-                          fontWeight: '600'
-                        }}>
-                          ${Math.round(item.interestPaid).toLocaleString()}
+                        <div style={{ fontWeight: '600', color: '#212529' }}>
+                          {item.name}
+                          {isMobile && (
+                            <div style={{ fontSize: '0.7rem', color: '#6c757d', marginTop: '0.25rem' }}>
+                              ${Math.round(item.originalBalance).toLocaleString()} • {item.rate}% • ${Math.round(item.interestPaid).toLocaleString()} interest
+                            </div>
+                          )}
                         </div>
+                        {!isMobile && (
+                          <>
+                            <div style={{ color: '#6c757d' }}>${Math.round(item.originalBalance).toLocaleString()}</div>
+                            <div style={{ color: '#f59e0b', fontWeight: '600' }}>{item.rate}%</div>
+                            <div style={{ 
+                              color: item.interestPaid > 1000 ? '#dc2626' : '#16a34a',
+                              fontWeight: '600'
+                            }}>
+                              ${Math.round(item.interestPaid).toLocaleString()}
+                            </div>
+                          </>
+                        )}
                       </div>
                     ))}
                   </div>
+                  
+                  {/* Mobile Quick Actions */}
+                  {isMobile && (
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '0.5rem', marginTop: '1rem' }}>
+                      <button onClick={shareResults} style={{
+                        padding: '0.75rem',
+                        background: 'white',
+                        border: '2px solid #e9ecef',
+                        borderRadius: '10px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        gap: '0.5rem',
+                        cursor: 'pointer',
+                        fontSize: '0.875rem'
+                      }}>
+                        <Share2 size={16} />
+                        Share
+                      </button>
+                      <button onClick={downloadCSV} style={{
+                        padding: '0.75rem',
+                        background: 'white',
+                        border: '2px solid #e9ecef',
+                        borderRadius: '10px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        gap: '0.5rem',
+                        cursor: 'pointer',
+                        fontSize: '0.875rem'
+                      }}>
+                        <FileText size={16} />
+                        Export
+                      </button>
+                    </div>
+                  )}
                   
                   {/* Important Disclaimer */}
                   <div style={{
@@ -1194,7 +1282,7 @@ function App() {
           )}
         </div>
 
-        {/* Right Panel */}
+        {/* Right Panel - Only visible on desktop */}
         <div style={styles.sidePanel}>
           {/* Quick Actions */}
           <div style={styles.card}>
@@ -1313,7 +1401,13 @@ function App() {
             </p>
           </div>
 
-          <div style={{ display: 'flex', gap: '2rem', justifyContent: 'center', alignItems: 'center' }}>
+          <div style={{ 
+            display: 'flex', 
+            flexDirection: isMobile ? 'column' : 'row',
+            gap: isMobile ? '0.5rem' : '2rem', 
+            justifyContent: 'center', 
+            alignItems: 'center' 
+          }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.875rem', color: '#495057' }}>
               <Shield size={16} color="#10b981" />
               <span>100% Private</span>
@@ -1328,7 +1422,12 @@ function App() {
             </div>
           </div>
 
-          <div style={{ display: 'flex', gap: '1.5rem', justifyContent: 'flex-end', fontSize: '0.875rem' }}>
+          <div style={{ 
+            display: 'flex', 
+            gap: '1.5rem', 
+            justifyContent: isMobile ? 'center' : 'flex-end', 
+            fontSize: '0.875rem' 
+          }}>
             <a href="#" style={{ color: '#6c757d', textDecoration: 'none' }}>Privacy</a>
             <a href="mailto:support@byebyebalance.com" style={{ color: '#6c757d', textDecoration: 'none' }}>Contact</a>
           </div>
@@ -1363,23 +1462,6 @@ function App() {
           }
         }
         
-        @media (max-width: 768px) {
-          .main-content {
-            grid-template-columns: 1fr !important;
-            padding: 1rem !important;
-          }
-          
-          .stats-grid {
-            grid-template-columns: 1fr !important;
-          }
-          
-          .footer-content {
-            grid-template-columns: 1fr !important;
-            text-align: center;
-            gap: 1rem;
-          }
-        }
-        
         button:hover {
           transform: translateY(-1px);
           box-shadow: 0 4px 12px rgba(0,0,0,0.15);
@@ -1387,6 +1469,17 @@ function App() {
         
         a:hover {
           text-decoration: underline;
+        }
+        
+        /* Remove spinner buttons from number inputs */
+        input[type="number"]::-webkit-inner-spin-button,
+        input[type="number"]::-webkit-outer-spin-button {
+          -webkit-appearance: none;
+          margin: 0;
+        }
+        
+        input[type="number"] {
+          -moz-appearance: textfield;
         }
       `}</style>
     </div>
