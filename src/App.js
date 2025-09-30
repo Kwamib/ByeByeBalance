@@ -591,6 +591,27 @@ function App() {
 
             {/* Debt List */}
             <div style={{ marginTop: '1.5rem' }}>
+              {/* Example Data Banner */}
+              {debts.some(d => d.balance > 0) && (
+                <div style={{
+                  background: 'linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%)',
+                  border: '1px solid #93c5fd',
+                  borderRadius: '10px',
+                  padding: '0.75rem',
+                  marginBottom: '1rem',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.5rem',
+                  fontSize: '0.875rem',
+                  color: '#1e40af'
+                }}>
+                  <span style={{ fontSize: '1rem' }}>💡</span>
+                  <span>
+                    <strong>Example debts shown</strong> - Edit these directly or click 'Reset All' to start fresh with your own debts
+                  </span>
+                </div>
+              )}
+              
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
                 <h3 style={{ margin: 0, fontSize: isMobile ? '1.125rem' : '1.25rem' }}>Your Debts</h3>
                 <button
