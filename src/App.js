@@ -1462,7 +1462,7 @@ function App() {
           fontSize: '0.8rem',
           color: '#6c757d'
         }}>
-          © 2024 ByeByeBalance | Empowering debt-free futures
+          © 2025 ByeByeBalance | Empowering debt-free futures
         </div>
       </footer>
 
