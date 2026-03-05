@@ -8,4 +8,6 @@ export { default as Results } from './Results';
 export { default as SidePanel } from './SidePanel';
 export { default as Footer } from './Footer';
 export { default as PrintReport } from './PrintReport';
+export { default as MortgagePage } from './MortgagePage';
+export { default as QualifyPage } from './QualifyPage';
 export { InlineWarning, GlobalWarningBanner } from './WarningBanner';

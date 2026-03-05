@@ -64,8 +64,11 @@ export default function Footer({ isMobile }) {
           <Link href="/contact" style={{ color: '#6c757d', textDecoration: 'none' }}>Contact</Link>
         </div>
       </div>
-      <div style={{ textAlign: 'center', marginTop: '2rem', paddingTop: '1rem', borderTop: '1px solid #e9ecef', fontSize: '0.8rem', color: '#6c757d' }}>
-        © 2025 ByeByeBalance | Empowering debt-free futures
+      <div style={{ textAlign: 'center', marginTop: '2rem', paddingTop: '1rem', borderTop: '1px solid #e9ecef' }}>
+        <div style={{ fontSize: '0.8rem', color: '#94a3b8', marginBottom: '0.5rem' }}>
+          ByeByeBalance is free forever. If it helped you, <a href="https://buymeacoffee.com" target="_blank" rel="noopener noreferrer" style={{ color: '#667eea', textDecoration: 'none', fontWeight: 600 }}>buy me a coffee ☕</a>
+        </div>
+        <div style={{ fontSize: '0.75rem', color: '#cbd5e1' }}>© 2025 ByeByeBalance | Empowering debt-free futures</div>
       </div>
     </footer>
   );
