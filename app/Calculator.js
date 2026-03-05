@@ -26,10 +26,9 @@ import PrintReport from './components/PrintReport';
 function App() {
   const isMobile = useMobile();
   const {
-    debts, strategy, extraPayment, onboardingMode,
+    debts, strategy, extraPayment,
     setStrategy, setExtraPayment,
     updateDebt, removeDebt, addDebt, clearAll,
-    startWithExamples, startFresh,
     totalDebt, avgRate, monthlyMin,
   } = useDebts();
 
@@ -76,9 +75,10 @@ function App() {
 
   // Actions
   const handleClear = useCallback(() => {
-    clearAll();
-    setResults(null);
-    setComparisonResults(null);
+    if (clearAll()) {
+      setResults(null);
+      setComparisonResults(null);
+    }
   }, [clearAll]);
 
   const exportPDF = useCallback(() => window.print(), []);
@@ -149,56 +149,47 @@ function App() {
             monthlyMin={monthlyMin}
             warningMap={warningMap}
             isMobile={isMobile}
-            onboardingMode={onboardingMode}
             onUpdate={updateDebt}
             onRemove={removeDebt}
             onAdd={addDebt}
             onClear={handleClear}
-            onStartExamples={startWithExamples}
-            onStartFresh={startFresh}
           />
 
-          {onboardingMode !== null && (
-            <>
-              <GlobalWarningBanner warnings={debtWarnings} />
+          <GlobalWarningBanner warnings={debtWarnings} />
 
-              <StrategySelector
-                strategy={strategy}
-                extraPayment={extraPayment}
-                isMobile={isMobile}
-                onStrategyChange={setStrategy}
-                onExtraChange={setExtraPayment}
-                onCalculate={handleCalculate}
-              />
+          <StrategySelector
+            strategy={strategy}
+            extraPayment={extraPayment}
+            isMobile={isMobile}
+            onStrategyChange={setStrategy}
+            onExtraChange={setExtraPayment}
+            onCalculate={handleCalculate}
+          />
 
-              <StrategyComparison
-                comparison={comparisonResults}
-                strategy={strategy}
-                isMobile={isMobile}
-              />
+          <StrategyComparison
+            comparison={comparisonResults}
+            strategy={strategy}
+            isMobile={isMobile}
+          />
 
-              <Results
-                results={results}
-                extraPayment={extraPayment}
-                isMobile={isMobile}
-                onShare={shareResults}
-                onExportPDF={exportPDF}
-                onDownloadCSV={downloadCSV}
-              />
-            </>
-          )}
-        </div>
-
-        {/* Right Panel */}
-        {onboardingMode !== null && (
-          <SidePanel
+          <Results
+            results={results}
+            extraPayment={extraPayment}
             isMobile={isMobile}
             onShare={shareResults}
             onExportPDF={exportPDF}
             onDownloadCSV={downloadCSV}
-            onClear={handleClear}
           />
-        )}
+        </div>
+
+        {/* Right Panel */}
+        <SidePanel
+          isMobile={isMobile}
+          onShare={shareResults}
+          onExportPDF={exportPDF}
+          onDownloadCSV={downloadCSV}
+          onClear={handleClear}
+        />
       </div>
 
       <Footer isMobile={isMobile} />
