@@ -167,15 +167,10 @@ export function runFullCalculation(debts, strategy, extraPayment) {
   return { results, comparison };
 }
 
-
 // ═══════════════════════════════════════════════════════════════
 // MORTGAGE CALCULATIONS
 // ═══════════════════════════════════════════════════════════════
 
-/**
- * Calculate mortgage amortization with optional extra payments.
- * Returns monthlyPayment, totalInterest, totalPaid, schedule, and payoffMonths.
- */
 export function calculateMortgage(principal, annualRate, termYears, extraMonthly = 0) {
   const r = annualRate / 100 / 12;
   const n = termYears * 12;
@@ -200,7 +195,6 @@ export function calculateMortgage(principal, annualRate, termYears, extraMonthly
     balance = Math.max(0, balance - principalPaid);
     totalInterest += interest;
 
-    // Sample data for chart: every month in year 1, then every 12 months, plus final
     if (month <= 12 || month % 12 === 0 || balance === 0) {
       schedule.push({
         month,
@@ -215,14 +209,10 @@ export function calculateMortgage(principal, annualRate, termYears, extraMonthly
   return { monthlyPayment, totalInterest, totalPaid: principal + totalInterest, schedule, payoffMonths: month };
 }
 
-
 // ═══════════════════════════════════════════════════════════════
 // DTI / QUALIFICATION CALCULATIONS
 // ═══════════════════════════════════════════════════════════════
 
-/**
- * Calculate Debt-to-Income ratios and qualification status.
- */
 export function calculateDTI(grossMonthlyIncome, monthlyDebts, proposedHousingPayment) {
   const totalDebtPayments = monthlyDebts.reduce((sum, d) => sum + (d.minPayment || 0), 0);
   const frontEnd = grossMonthlyIncome > 0 ? (proposedHousingPayment / grossMonthlyIncome) * 100 : 0;
@@ -230,25 +220,22 @@ export function calculateDTI(grossMonthlyIncome, monthlyDebts, proposedHousingPa
 
   let status, color, message;
   if (backEnd <= 36) {
-    status = 'Strong'; color = '#059669';
+    status = 'Strong'; color = '#5A7A66';
     message = "You're in a great position. Most lenders would approve you.";
   } else if (backEnd <= 43) {
-    status = 'Borderline'; color = '#f59e0b';
+    status = 'Borderline'; color = '#C0714A';
     message = 'Some lenders will approve, but you may face higher rates.';
   } else if (backEnd <= 50) {
-    status = 'Risky'; color = '#ef4444';
+    status = 'Risky'; color = '#B84545';
     message = 'Most conventional lenders would decline. FHA may be an option.';
   } else {
-    status = 'Over Limit'; color = '#991b1b';
+    status = 'Over Limit'; color = '#9f1239';
     message = 'DTI is too high for most loan programs. Focus on paying down debt first.';
   }
 
   return { frontEnd, backEnd, status, color, message, totalDebtPayments, proposedHousingPayment };
 }
 
-/**
- * Calculate the maximum affordable home price at a given DTI target.
- */
 export function getMaxAffordable(grossMonthlyIncome, totalDebtPayments, annualRate, termYears, targetDTI = 0.43) {
   const maxTotalPayment = grossMonthlyIncome * targetDTI;
   const availableForHousing = Math.max(0, maxTotalPayment - totalDebtPayments);

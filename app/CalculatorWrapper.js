@@ -8,13 +8,13 @@ const Calculator = dynamic(() => import('./Calculator'), {
     <div
       style={{
         minHeight: '100vh',
-        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+        background: 'var(--bg)',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
         color: 'white',
-        fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+        fontFamily: 'var(--font-body)',
       }}
     >
       <h1 style={{ fontSize: '2.5rem', fontWeight: 900, marginBottom: '1rem' }}>

@@ -5,6 +5,7 @@ import { DEFAULT_DEBTS, DEFAULT_EXTRA_PAYMENT, DEFAULT_STRATEGY, STORAGE_KEY } f
 
 /**
  * Custom hook for managing debt state with localStorage persistence.
+ * Encapsulates all CRUD operations and persistence logic.
  */
 export function useDebts() {
   const [debts, setDebts] = useState(DEFAULT_DEBTS);
@@ -61,11 +62,12 @@ export function useDebts() {
       setDebts([{ id: 1, name: '', balance: 0, rate: 0, minPayment: 0 }]);
       setExtraPayment(0);
       setStrategy(DEFAULT_STRATEGY);
-      return true;
+      return true; // signal to clear results
     }
     return false;
   }, []);
 
+  // Computed values
   const totalDebt = debts.reduce((sum, d) => sum + (d.balance || 0), 0);
   const avgRate = debts.length > 0 ? debts.reduce((sum, d) => sum + (d.rate || 0), 0) / debts.length : 0;
   const monthlyMin = debts.reduce((sum, d) => sum + (d.minPayment || 0), 0);

@@ -7,12 +7,51 @@ import { calculateMortgage } from '../utils/calculations';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 
-const CARD = { background: 'white', borderRadius: 20, padding: '1.5rem', boxShadow: '0 4px 24px rgba(0,0,0,0.08)', marginBottom: '1.5rem' };
-const LABEL = { fontSize: '0.72rem', color: '#64748b', display: 'block', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 4 };
-const INPUT = { width: '100%', padding: '0.6rem 0.75rem', border: '2px solid #e2e8f0', borderRadius: 8, fontSize: '0.95rem', outline: 'none', boxSizing: 'border-box' };
+const CARD = {
+  background: 'var(--bg-card)',
+  borderRadius: 6,
+  border: '1px solid var(--border)',
+  padding: '1.25rem 1.5rem',
+  marginBottom: '1rem',
+};
+
+const LABEL = {
+  fontSize: '0.6rem',
+  fontWeight: 600,
+  letterSpacing: '1.5px',
+  textTransform: 'uppercase',
+  color: 'var(--text-muted)',
+  display: 'block',
+  marginBottom: 5,
+};
+
+const INPUT = {
+  width: '100%',
+  padding: '9px 11px',
+  border: '1px solid var(--border)',
+  borderRadius: 4,
+  fontSize: '0.9rem',
+  fontFamily: 'var(--font-body)',
+  color: 'var(--text-primary)',
+  background: 'var(--bg)',
+  outline: 'none',
+  boxSizing: 'border-box',
+};
 
 function fmt(v) { return '$' + Math.round(v).toLocaleString(); }
 function fmtK(v) { return v >= 1000 ? '$' + Math.round(v / 1000) + 'K' : fmt(v); }
+
+function StatCell({ label, value, sub, color }) {
+  return (
+    <div style={{ padding: '1rem 1.25rem' }}>
+      <div style={LABEL}>{label}</div>
+      <div style={{ fontFamily: 'var(--font-body)', fontSize: '1.35rem', fontWeight: 600, color: color || 'var(--text-primary)', fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.3px', lineHeight: 1 }}>
+        {value}
+      </div>
+      {sub && <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', marginTop: 4 }}>{sub}</div>}
+    </div>
+  );
+}
 
 export default function MortgagePage() {
   const isMobile = useMobile();
@@ -43,50 +82,81 @@ export default function MortgagePage() {
     return d;
   }, [base, withExtra, term]);
 
+  const downPct = homePrice > 0 ? ((downPayment / homePrice) * 100).toFixed(0) : 0;
+
   return (
-    <div style={{ minHeight: '100vh', background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" }}>
+    <div style={{ minHeight: '100vh', background: 'var(--bg)', fontFamily: 'var(--font-body)' }}>
       <Header isMobile={isMobile} />
 
-      <div style={{ maxWidth: 1200, margin: isMobile ? '1rem auto' : '2rem auto', padding: isMobile ? '0 1rem' : '0 2rem' }}>
-        <div style={{ textAlign: 'center', color: 'white', marginBottom: '2rem' }}>
-          <h2 style={{ fontSize: isMobile ? '1.75rem' : '2.25rem', fontWeight: 800, marginBottom: '0.5rem' }}>The Real Cost of Your Mortgage</h2>
-          <p style={{ fontSize: isMobile ? '1rem' : '1.1rem', opacity: 0.9 }}>See what your lender won{"'"}t show you — and how to save tens of thousands</p>
+      <div style={{ maxWidth: 1200, margin: '0 auto', padding: isMobile ? '0 1rem' : '0 2rem' }}>
+        {/* Hero */}
+        <div style={{ padding: isMobile ? '2rem 0 1.5rem' : '3rem 0 2rem' }}>
+          <div style={{ fontSize: '0.65rem', fontWeight: 600, letterSpacing: '2px', textTransform: 'uppercase', color: 'var(--slate)', marginBottom: '0.75rem' }}>
+            Mortgage Calculator
+          </div>
+          <h1 style={{ fontFamily: 'var(--font-display)', fontSize: isMobile ? '2.5rem' : '3.5rem', fontWeight: 600, lineHeight: 1.0, letterSpacing: '-1.5px', color: 'var(--text-primary)', margin: 0 }}>
+            The real cost<br />of your{' '}
+            <em style={{ fontStyle: 'italic', color: 'var(--slate)' }}>mortgage.</em>
+          </h1>
+          <p style={{ fontSize: '0.9rem', fontWeight: 300, color: 'var(--text-secondary)', lineHeight: 1.6, marginTop: '1rem', marginBottom: 0, maxWidth: 400 }}>
+            See what your lender won&apos;t show you — and how to save tens of thousands.
+          </p>
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: '2rem' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: '1.5rem' }}>
           {/* Left: Inputs */}
           <div>
             <div style={CARD}>
-              <h3 style={{ margin: '0 0 1rem', fontSize: '1.1rem', color: '#1e293b' }}>Mortgage Details</h3>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
-                <div><label style={LABEL}>Home Price</label><input type="text" inputMode="numeric" value={homePrice ? homePrice.toLocaleString() : ''} onChange={e => { const raw = e.target.value.replace(/[^0-9.]/g, ''); setHomePrice(raw === '' ? 0 : parseFloat(raw)); }} style={INPUT} /></div>
-                <div><label style={LABEL}>Down Payment</label><input type="text" inputMode="numeric" value={downPayment ? downPayment.toLocaleString() : ''} onChange={e => { const raw = e.target.value.replace(/[^0-9.]/g, ''); setDownPayment(raw === '' ? 0 : parseFloat(raw)); }} style={INPUT} /></div>
-                <div><label style={LABEL}>Interest Rate (%)</label><input type="number" step="0.01" value={rate || ''} onChange={e => setRate(parseFloat(e.target.value) || 0)} style={INPUT} /></div>
+              <h3 style={{ margin: '0 0 1rem', fontFamily: 'var(--font-display)', fontSize: '1.4rem', fontWeight: 600, letterSpacing: '-0.2px', color: 'var(--text-primary)' }}>
+                Mortgage Details
+              </h3>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.875rem' }}>
+                <div>
+                  <label style={LABEL}>Home Price</label>
+                  <input type="text" inputMode="numeric" value={homePrice ? homePrice.toLocaleString() : ''} onChange={e => { const raw = e.target.value.replace(/[^0-9.]/g, ''); setHomePrice(raw === '' ? 0 : parseFloat(raw)); }} style={INPUT} />
+                </div>
+                <div>
+                  <label style={LABEL}>Down Payment</label>
+                  <input type="text" inputMode="numeric" value={downPayment ? downPayment.toLocaleString() : ''} onChange={e => { const raw = e.target.value.replace(/[^0-9.]/g, ''); setDownPayment(raw === '' ? 0 : parseFloat(raw)); }} style={INPUT} />
+                </div>
+                <div>
+                  <label style={LABEL}>Interest Rate (%)</label>
+                  <input type="number" step="0.01" value={rate || ''} onChange={e => setRate(parseFloat(e.target.value) || 0)} style={INPUT} />
+                </div>
                 <div>
                   <label style={LABEL}>Loan Term</label>
-                  <div style={{ display: 'flex', gap: 6 }}>
+                  <div style={{ display: 'flex', gap: 5 }}>
                     {[15, 20, 30].map(t => (
-                      <button key={t} onClick={() => setTerm(t)} style={{ flex: 1, padding: '0.6rem', border: '2px solid', borderColor: term === t ? '#667eea' : '#e2e8f0', borderRadius: 8, background: term === t ? '#667eea10' : 'white', color: term === t ? '#667eea' : '#64748b', fontWeight: 600, cursor: 'pointer', fontSize: '0.9rem' }}>{t}yr</button>
+                      <button key={t} onClick={() => setTerm(t)} style={{ flex: 1, padding: '8px 4px', border: '1px solid', borderColor: term === t ? 'var(--slate)' : 'var(--border)', borderRadius: 4, background: term === t ? 'var(--slate-light)' : 'var(--bg)', color: term === t ? 'var(--slate)' : 'var(--text-secondary)', fontFamily: 'var(--font-body)', fontWeight: term === t ? 500 : 400, fontSize: '0.8rem', cursor: 'pointer' }}>
+                        {t}yr
+                      </button>
                     ))}
                   </div>
                 </div>
               </div>
-              <div style={{ marginTop: '1rem', padding: '1rem', background: '#f8fafc', borderRadius: 12, border: '1px solid #e2e8f0' }}>
-                <div style={{ fontSize: '0.72rem', color: '#64748b', fontWeight: 600, textTransform: 'uppercase', marginBottom: 4 }}>Loan Amount</div>
-                <div style={{ fontSize: '1.75rem', fontWeight: 800, color: '#1e293b' }}>{fmt(loan)}</div>
-                <div style={{ fontSize: '0.8rem', color: '#94a3b8' }}>{homePrice > 0 ? ((downPayment / homePrice) * 100).toFixed(0) : 0}% down</div>
+
+              {/* Loan amount result */}
+              <div style={{ marginTop: '1rem', display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', border: '1px solid var(--border)', borderRadius: 4, overflow: 'hidden' }}>
+                <StatCell label="Loan Amount" value={fmt(loan)} sub={`${downPct}% down`} />
+                <StatCell label="Monthly Payment" value={fmt(base.monthlyPayment) + '/mo'} color="var(--slate)" />
+                <StatCell label="Total Interest" value={fmt(base.totalInterest)} color="var(--warn)" />
               </div>
             </div>
 
+            {/* Extra payment */}
             <div style={CARD}>
-              <h3 style={{ margin: '0 0 0.5rem', fontSize: '1.05rem', color: '#1e293b' }}>Extra Monthly Payment</h3>
-              <p style={{ fontSize: '0.8rem', color: '#64748b', marginTop: 0 }}>This is where it gets interesting.</p>
-              <input type="range" min={0} max={2000} step={50} value={extra} onChange={e => setExtra(parseInt(e.target.value))} style={{ width: '100%', accentColor: '#667eea' }} />
+              <h3 style={{ margin: '0 0 0.25rem', fontFamily: 'var(--font-display)', fontSize: '1.25rem', fontWeight: 600, color: 'var(--text-primary)', letterSpacing: '-0.2px' }}>
+                Extra Monthly Payment
+              </h3>
+              <p style={{ fontSize: '0.78rem', color: 'var(--text-muted)', margin: '0 0 0.875rem' }}>This is where it gets interesting.</p>
+              <input type="range" min={0} max={2000} step={50} value={extra} onChange={e => setExtra(parseInt(e.target.value))} style={{ width: '100%', accentColor: 'var(--slate)' }} />
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 8 }}>
-                <span style={{ fontSize: '1.5rem', fontWeight: 800, color: '#667eea' }}>{fmt(extra)}/mo</span>
-                <div style={{ display: 'flex', gap: 6 }}>
+                <span style={{ fontFamily: 'var(--font-body)', fontSize: '1.25rem', fontWeight: 600, color: 'var(--slate)', fontVariantNumeric: 'tabular-nums' }}>{fmt(extra)}/mo</span>
+                <div style={{ display: 'flex', gap: 5 }}>
                   {[0, 200, 500, 1000].map(v => (
-                    <button key={v} onClick={() => setExtra(v)} style={{ padding: '0.3rem 0.6rem', borderRadius: 6, border: '1px solid', borderColor: extra === v ? '#667eea' : '#e2e8f0', background: extra === v ? '#667eea' : 'white', color: extra === v ? 'white' : '#64748b', fontSize: '0.75rem', cursor: 'pointer', fontWeight: 600 }}>{v === 0 ? 'None' : `+$${v}`}</button>
+                    <button key={v} onClick={() => setExtra(v)} style={{ padding: '4px 8px', borderRadius: 4, border: '1px solid', borderColor: extra === v ? 'var(--slate)' : 'var(--border)', background: extra === v ? 'var(--slate)' : 'var(--bg)', color: extra === v ? 'white' : 'var(--text-muted)', fontSize: '0.7rem', cursor: 'pointer', fontFamily: 'var(--font-body)' }}>
+                      {v === 0 ? 'None' : `+$${v}`}
+                    </button>
                   ))}
                 </div>
               </div>
@@ -95,123 +165,135 @@ export default function MortgagePage() {
 
           {/* Right: Results */}
           <div>
-            {/* Hidden Cost */}
-            <div style={{ ...CARD, background: 'linear-gradient(135deg, #fef2f2, #fef2f2)', border: '2px solid #fecaca' }}>
-              <h3 style={{ margin: '0 0 1rem', fontSize: '1.05rem', color: '#991b1b' }}>💸 The Hidden Cost</h3>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
-                <div style={{ textAlign: 'center' }}>
-                  <div style={{ fontSize: '0.7rem', color: '#dc2626', fontWeight: 600, textTransform: 'uppercase', marginBottom: 4 }}>Total Interest</div>
-                  <div style={{ fontSize: '1.75rem', fontWeight: 800, color: '#dc2626' }}>{fmt(base.totalInterest)}</div>
+            {/* Hidden cost */}
+            <div style={{ ...CARD, borderColor: 'var(--warn)', background: 'var(--warn-light)' }}>
+              <h3 style={{ margin: '0 0 1rem', fontFamily: 'var(--font-display)', fontSize: '1.25rem', fontWeight: 600, color: 'var(--warn)', letterSpacing: '-0.2px' }}>
+                The Hidden Cost
+              </h3>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.875rem' }}>
+                <div style={{ textAlign: 'center', padding: '0.875rem', background: 'var(--bg)', borderRadius: 4, border: '1px solid var(--border)' }}>
+                  <div style={{ fontSize: '0.6rem', color: 'var(--warn)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '1px', marginBottom: 5 }}>Total Interest</div>
+                  <div style={{ fontFamily: 'var(--font-body)', fontSize: '1.35rem', fontWeight: 600, color: 'var(--warn)', fontVariantNumeric: 'tabular-nums' }}>{fmt(base.totalInterest)}</div>
                 </div>
-                <div style={{ textAlign: 'center' }}>
-                  <div style={{ fontSize: '0.7rem', color: '#991b1b', fontWeight: 600, textTransform: 'uppercase', marginBottom: 4 }}>True Cost of Home</div>
-                  <div style={{ fontSize: '1.75rem', fontWeight: 800, color: '#991b1b' }}>{fmt(base.totalPaid + downPayment)}</div>
+                <div style={{ textAlign: 'center', padding: '0.875rem', background: 'var(--bg)', borderRadius: 4, border: '1px solid var(--border)' }}>
+                  <div style={{ fontSize: '0.6rem', color: 'var(--warn)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '1px', marginBottom: 5 }}>True Cost of Home</div>
+                  <div style={{ fontFamily: 'var(--font-body)', fontSize: '1.35rem', fontWeight: 600, color: 'var(--text-primary)', fontVariantNumeric: 'tabular-nums' }}>{fmt(base.totalPaid + downPayment)}</div>
                 </div>
               </div>
-              <div style={{ marginTop: '1rem', padding: '0.75rem', background: 'white', borderRadius: 10, border: '1px solid #fecaca', fontSize: '0.8rem', color: '#991b1b', textAlign: 'center', lineHeight: 1.5 }}>
-                On a {fmt(homePrice)} home, you{"'"}ll pay <strong>{fmt(base.totalInterest)}</strong> in interest — <strong>{homePrice > 0 ? ((base.totalInterest / homePrice) * 100).toFixed(0) : 0}%</strong> of the home{"'"}s price on top of what you borrowed.
+              <div style={{ marginTop: '0.875rem', padding: '0.75rem', background: 'var(--bg)', borderRadius: 4, border: '1px solid var(--border)', fontSize: '0.78rem', color: 'var(--text-secondary)', textAlign: 'center', lineHeight: 1.5 }}>
+                On a {fmt(homePrice)} home, you&apos;ll pay <strong style={{ color: 'var(--warn)' }}>{fmt(base.totalInterest)}</strong> in interest — <strong>{homePrice > 0 ? ((base.totalInterest / homePrice) * 100).toFixed(0) : 0}%</strong> of the home&apos;s price on top of what you borrowed.
               </div>
             </div>
 
-            {/* Year 1 Breakdown */}
+            {/* Year 1 */}
             <div style={CARD}>
-              <h3 style={{ margin: '0 0 0.75rem', fontSize: '1.05rem', color: '#1e293b' }}>Year 1: Where Your Money Goes</h3>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
-                <div style={{ width: 110, height: 110, flexShrink: 0 }}>
+              <h3 style={{ margin: '0 0 0.875rem', fontFamily: 'var(--font-display)', fontSize: '1.25rem', fontWeight: 600, color: 'var(--text-primary)', letterSpacing: '-0.2px' }}>
+                Year 1: Where Your Money Goes
+              </h3>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '1.25rem' }}>
+                <div style={{ width: 90, height: 90, flexShrink: 0 }}>
                   <svg viewBox="0 0 100 100" style={{ transform: 'rotate(-90deg)' }}>
-                    <circle cx="50" cy="50" r="40" fill="none" stroke="#fee2e2" strokeWidth="12" />
-                    <circle cx="50" cy="50" r="40" fill="none" stroke="#dc2626" strokeWidth="12" strokeDasharray={`${(yr1.interest / (yr1.interest + yr1.principal || 1)) * 251.2} 251.2`} />
+                    <circle cx="50" cy="50" r="40" fill="none" stroke="var(--border)" strokeWidth="12" />
+                    <circle cx="50" cy="50" r="40" fill="none" stroke="var(--warn)" strokeWidth="12" strokeDasharray={`${(yr1.interest / (yr1.interest + yr1.principal || 1)) * 251.2} 251.2`} />
                   </svg>
                 </div>
                 <div style={{ flex: 1 }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
-                    <div style={{ width: 12, height: 12, borderRadius: 3, background: '#dc2626' }} />
-                    <span style={{ fontSize: '0.85rem', color: '#64748b' }}>Interest</span>
-                    <span style={{ fontSize: '1.1rem', fontWeight: 700, color: '#dc2626', marginLeft: 'auto' }}>{fmt(yr1.interest)}</span>
+                    <div style={{ width: 10, height: 10, borderRadius: 2, background: 'var(--warn)', flexShrink: 0 }} />
+                    <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>Interest</span>
+                    <span style={{ fontFamily: 'var(--font-body)', fontWeight: 600, color: 'var(--warn)', marginLeft: 'auto', fontVariantNumeric: 'tabular-nums' }}>{fmt(yr1.interest)}</span>
                   </div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                    <div style={{ width: 12, height: 12, borderRadius: 3, background: '#fee2e2' }} />
-                    <span style={{ fontSize: '0.85rem', color: '#64748b' }}>Principal</span>
-                    <span style={{ fontSize: '1.1rem', fontWeight: 700, color: '#059669', marginLeft: 'auto' }}>{fmt(yr1.principal)}</span>
+                    <div style={{ width: 10, height: 10, borderRadius: 2, background: 'var(--sage)', flexShrink: 0 }} />
+                    <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>Principal</span>
+                    <span style={{ fontFamily: 'var(--font-body)', fontWeight: 600, color: 'var(--sage-dark)', marginLeft: 'auto', fontVariantNumeric: 'tabular-nums' }}>{fmt(yr1.principal)}</span>
                   </div>
-                  <div style={{ marginTop: 12, padding: '0.5rem 0.75rem', background: '#fef3c7', borderRadius: 8, fontSize: '0.75rem', color: '#92400e', lineHeight: 1.5 }}>
-                    {((yr1.interest / (yr1.interest + yr1.principal || 1)) * 100).toFixed(0)}% of your first year{"'"}s payments go straight to interest.
+                  <div style={{ marginTop: 10, padding: '6px 10px', background: 'var(--warn-light)', border: '1px solid var(--border)', borderRadius: 4, fontSize: '0.72rem', color: 'var(--warn)', lineHeight: 1.4 }}>
+                    {((yr1.interest / (yr1.interest + yr1.principal || 1)) * 100).toFixed(0)}% of your first year&apos;s payments go straight to interest.
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* Extra Payment Savings */}
+            {/* Extra payment savings */}
             {extra > 0 && (
-              <div style={{ ...CARD, background: 'linear-gradient(135deg, #f0fdf4, #dcfce7)', border: '2px solid #86efac' }}>
-                <h3 style={{ margin: '0 0 1rem', fontSize: '1.05rem', color: '#047857' }}>🎉 With {fmt(extra)}/mo Extra</h3>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '0.75rem' }}>
+              <div style={{ ...CARD, borderColor: 'var(--sage)', background: 'var(--sage-light)' }}>
+                <h3 style={{ margin: '0 0 0.875rem', fontFamily: 'var(--font-display)', fontSize: '1.25rem', fontWeight: 600, color: 'var(--sage-dark)', letterSpacing: '-0.2px' }}>
+                  With {fmt(extra)}/mo Extra
+                </h3>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.5rem' }}>
                   {[
                     { label: 'Interest Saved', value: fmt(base.totalInterest - withExtra.totalInterest) },
-                    { label: 'Years Saved', value: ((base.payoffMonths - withExtra.payoffMonths) / 12).toFixed(1) },
+                    { label: 'Years Saved', value: ((base.payoffMonths - withExtra.payoffMonths) / 12).toFixed(1) + 'yr' },
                     { label: 'Payoff In', value: (withExtra.payoffMonths / 12).toFixed(1) + 'yr' },
                   ].map(m => (
-                    <div key={m.label} style={{ textAlign: 'center', padding: '0.75rem', background: 'white', borderRadius: 10, border: '1px solid #86efac' }}>
-                      <div style={{ fontSize: '0.65rem', color: '#047857', fontWeight: 600, textTransform: 'uppercase' }}>{m.label}</div>
-                      <div style={{ fontSize: '1.35rem', fontWeight: 800, color: '#059669' }}>{m.value}</div>
+                    <div key={m.label} style={{ textAlign: 'center', padding: '0.75rem 0.5rem', background: 'var(--bg)', borderRadius: 4, border: '1px solid var(--border)' }}>
+                      <div style={{ fontSize: '0.6rem', color: 'var(--sage-dark)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '1px', marginBottom: 4 }}>{m.label}</div>
+                      <div style={{ fontFamily: 'var(--font-body)', fontSize: '1.1rem', fontWeight: 600, color: 'var(--sage-dark)', fontVariantNumeric: 'tabular-nums' }}>{m.value}</div>
                     </div>
                   ))}
                 </div>
               </div>
             )}
 
-            {/* Monthly Payment */}
+            {/* Term comparison */}
             <div style={CARD}>
-              <div style={{ fontSize: '2.5rem', fontWeight: 800, color: '#667eea' }}>{fmt(base.monthlyPayment)}<span style={{ fontSize: '1rem', fontWeight: 400, color: '#94a3b8' }}>/mo</span></div>
-              {extra > 0 && <div style={{ fontSize: '0.85rem', color: '#64748b', marginTop: 4 }}>+ {fmt(extra)} extra = <strong>{fmt(base.monthlyPayment + extra)}/mo</strong></div>}
+              <h3 style={{ margin: '0 0 0.875rem', fontFamily: 'var(--font-display)', fontSize: '1.25rem', fontWeight: 600, color: 'var(--text-primary)', letterSpacing: '-0.2px' }}>
+                Term Comparison
+              </h3>
+              <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: '0.75rem' }}>
+                {[30, 15].map(t => {
+                  const isCurrent = term === t;
+                  const data = isCurrent ? base : altTerm;
+                  return (
+                    <div key={t} style={{ padding: '1rem', borderRadius: 4, border: '1px solid', borderColor: isCurrent ? 'var(--slate)' : 'var(--border)', background: isCurrent ? 'var(--slate-light)' : 'var(--bg)' }}>
+                      <div style={{ fontSize: '0.6rem', color: isCurrent ? 'var(--slate)' : 'var(--text-muted)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '1px', marginBottom: 6 }}>
+                        {t}-Year {isCurrent && '← Current'}
+                      </div>
+                      <div style={{ fontFamily: 'var(--font-body)', fontSize: '1.2rem', fontWeight: 600, color: 'var(--text-primary)', fontVariantNumeric: 'tabular-nums' }}>{fmt(data.monthlyPayment)}/mo</div>
+                      <div style={{ fontSize: '0.75rem', color: t === 15 ? 'var(--sage-dark)' : 'var(--warn)', marginTop: 4 }}>Total interest: {fmt(data.totalInterest)}</div>
+                    </div>
+                  );
+                })}
+              </div>
+              <div style={{ marginTop: '0.875rem', padding: '10px 14px', background: 'var(--bg)', border: '1px solid var(--border)', borderLeft: '3px solid var(--sage)', borderRadius: 4, fontSize: '0.78rem', color: 'var(--text-secondary)', lineHeight: 1.5 }}>
+                The 15-year costs more monthly but saves <strong style={{ color: 'var(--sage-dark)' }}>{fmt(Math.abs((term === 30 ? base.totalInterest : altTerm.totalInterest) - (term === 15 ? base.totalInterest : altTerm.totalInterest)))}</strong> in interest.
+              </div>
             </div>
           </div>
         </div>
 
         {/* Chart */}
         <div style={{ ...CARD, marginTop: '0.5rem' }}>
-          <h3 style={{ margin: '0 0 1rem', fontSize: '1.1rem', color: '#1e293b' }}>Balance Over Time</h3>
+          <h3 style={{ margin: '0 0 1rem', fontFamily: 'var(--font-display)', fontSize: '1.4rem', fontWeight: 600, letterSpacing: '-0.2px', color: 'var(--text-primary)' }}>
+            Balance Over Time
+          </h3>
           <ResponsiveContainer width="100%" height={260}>
             <AreaChart data={chartData}>
               <defs>
-                <linearGradient id="gB" x1="0" y1="0" x2="0" y2="1"><stop offset="5%" stopColor="#ef4444" stopOpacity={0.15} /><stop offset="95%" stopColor="#ef4444" stopOpacity={0.02} /></linearGradient>
-                <linearGradient id="gE" x1="0" y1="0" x2="0" y2="1"><stop offset="5%" stopColor="#059669" stopOpacity={0.2} /><stop offset="95%" stopColor="#059669" stopOpacity={0.02} /></linearGradient>
+                <linearGradient id="gB" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor="#C0714A" stopOpacity={0.15} />
+                  <stop offset="95%" stopColor="#C0714A" stopOpacity={0.02} />
+                </linearGradient>
+                <linearGradient id="gE" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor="#7A9E87" stopOpacity={0.2} />
+                  <stop offset="95%" stopColor="#7A9E87" stopOpacity={0.02} />
+                </linearGradient>
               </defs>
-              <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
-              <XAxis dataKey="year" stroke="#94a3b8" fontSize={12} />
-              <YAxis stroke="#94a3b8" fontSize={12} tickFormatter={v => fmtK(v)} />
-              <Tooltip formatter={v => fmt(v)} contentStyle={{ borderRadius: 10, border: '1px solid #e2e8f0', fontSize: 13 }} />
-              <Area type="monotone" dataKey="Min Only" stroke="#ef4444" fill="url(#gB)" strokeWidth={2.5} strokeDasharray="6 4" />
-              {extra > 0 && <Area type="monotone" dataKey="With Extra" stroke="#059669" fill="url(#gE)" strokeWidth={2.5} />}
+              <CartesianGrid strokeDasharray="3 3" stroke="#D8D3C8" />
+              <XAxis dataKey="year" stroke="#8A9A9A" fontSize={11} />
+              <YAxis stroke="#8A9A9A" fontSize={11} tickFormatter={v => fmtK(v)} />
+              <Tooltip formatter={v => fmt(v)} contentStyle={{ borderRadius: 4, border: '1px solid #D8D3C8', fontSize: 12, fontFamily: 'var(--font-body)', background: '#EFECE4' }} />
+              <Area type="monotone" dataKey="Min Only" stroke="#C0714A" fill="url(#gB)" strokeWidth={2} strokeDasharray="5 4" />
+              {extra > 0 && <Area type="monotone" dataKey="With Extra" stroke="#7A9E87" fill="url(#gE)" strokeWidth={2} />}
             </AreaChart>
           </ResponsiveContainer>
           {extra > 0 && (
-            <div style={{ display: 'flex', gap: '2rem', justifyContent: 'center', marginTop: '0.75rem' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: '0.8rem', color: '#ef4444' }}><div style={{ width: 24, height: 3, background: '#ef4444', borderRadius: 2, opacity: 0.6 }} /> Min only</div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: '0.8rem', color: '#059669' }}><div style={{ width: 24, height: 3, background: '#059669', borderRadius: 2 }} /> With extra</div>
+            <div style={{ display: 'flex', gap: '1.5rem', justifyContent: 'center', marginTop: '0.75rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: '0.75rem', color: 'var(--warn)' }}><div style={{ width: 20, height: 2, background: 'var(--warn)', borderRadius: 2 }} /> Min only</div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: '0.75rem', color: 'var(--sage-dark)' }}><div style={{ width: 20, height: 2, background: 'var(--sage)', borderRadius: 2 }} /> With extra</div>
             </div>
           )}
-        </div>
-
-        {/* Term Comparison */}
-        <div style={CARD}>
-          <h3 style={{ margin: '0 0 1rem', fontSize: '1.1rem', color: '#1e293b' }}>Term Comparison</h3>
-          <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: '1rem' }}>
-            {[30, 15].map(t => {
-              const isCurrent = term === t;
-              const data = isCurrent ? base : altTerm;
-              return (
-                <div key={t} style={{ padding: '1.25rem', borderRadius: 14, border: isCurrent ? '2px solid #667eea' : '2px solid #e2e8f0', background: isCurrent ? '#667eea08' : 'white' }}>
-                  <div style={{ fontSize: '0.75rem', color: '#667eea', fontWeight: 700, marginBottom: 8 }}>{t}-YEAR {isCurrent && '← Current'}</div>
-                  <div style={{ fontSize: '1.25rem', fontWeight: 700, color: '#1e293b' }}>{fmt(data.monthlyPayment)}/mo</div>
-                  <div style={{ fontSize: '0.8rem', color: t === 15 ? '#059669' : '#ef4444', marginTop: 4 }}>Total interest: {fmt(data.totalInterest)}</div>
-                </div>
-              );
-            })}
-          </div>
-          <div style={{ marginTop: '1rem', padding: '0.75rem 1rem', background: '#fef3c7', borderRadius: 10, border: '1px solid #fde68a', fontSize: '0.8rem', color: '#92400e', lineHeight: 1.5, textAlign: 'center' }}>
-            💡 The 15-year costs more monthly but saves <strong>{fmt(Math.abs((term === 30 ? base.totalInterest : altTerm.totalInterest) - (term === 15 ? base.totalInterest : altTerm.totalInterest)))}</strong> in interest.
-          </div>
         </div>
       </div>
 

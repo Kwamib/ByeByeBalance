@@ -1,7 +1,6 @@
 'use client';
 
 import React from 'react';
-import { AlertCircle } from 'lucide-react';
 
 /**
  * Inline warning shown on individual debt cards
@@ -11,25 +10,20 @@ export function InlineWarning({ warning }) {
   return (
     <div
       style={{
-        background: '#fef3c7',
-        border: '1px solid #f59e0b',
-        borderRadius: '8px',
-        padding: '0.625rem 0.75rem',
-        marginBottom: '0.75rem',
-        display: 'flex',
-        alignItems: 'flex-start',
-        gap: '0.5rem',
-        fontSize: '0.8rem',
-        color: '#92400e',
-        lineHeight: 1.4,
+        background: 'var(--warn-light)',
+        border: '1px solid var(--border)',
+        borderLeft: '3px solid var(--warn)',
+        borderRadius: 4,
+        padding: '0.55rem 0.75rem',
+        marginBottom: '0.65rem',
+        fontSize: '0.75rem',
+        color: 'var(--warn)',
+        lineHeight: 1.5,
       }}
     >
-      <AlertCircle size={16} color="#f59e0b" style={{ flexShrink: 0, marginTop: '0.125rem' }} />
-      <div>
-        <strong>Warning:</strong> {warning.message}
-        <div style={{ marginTop: '0.25rem', fontSize: '0.75rem' }}>
-          Suggested minimum: <strong>${warning.requiredMin}/mo</strong>
-        </div>
+      <strong>Warning:</strong> {warning.message}
+      <div style={{ marginTop: '0.2rem', fontSize: '0.7rem', color: 'var(--text-secondary)' }}>
+        Suggested minimum: <strong>${warning.requiredMin}/mo</strong>
       </div>
     </div>
   );
@@ -43,26 +37,20 @@ export function GlobalWarningBanner({ warnings }) {
   return (
     <div
       style={{
-        background: '#fef3c7',
-        border: '2px solid #f59e0b',
-        borderRadius: '12px',
-        padding: '1rem',
-        marginBottom: '0',
-        display: 'flex',
-        alignItems: 'flex-start',
-        gap: '0.75rem',
+        background: 'var(--warn-light)',
+        border: '1px solid var(--border)',
+        borderLeft: '3px solid var(--warn)',
+        borderRadius: 4,
+        padding: '0.85rem 1rem',
       }}
     >
-      <AlertCircle size={22} color="#f59e0b" style={{ flexShrink: 0, marginTop: '0.125rem' }} />
-      <div>
-        <div style={{ fontWeight: '700', color: '#92400e', marginBottom: '0.25rem' }}>
-          ⚠️ {warnings.length} debt{warnings.length > 1 ? 's need' : ' needs'} attention
-        </div>
-        <div style={{ fontSize: '0.8rem', color: '#92400e', lineHeight: 1.5 }}>
-          {warnings.length === 1
-            ? `${warnings[0].debtName}'s minimum payment doesn't cover monthly interest. Increase it to at least $${warnings[0].requiredMin}/mo.`
-            : "Some minimum payments don't cover monthly interest. These debts will grow instead of shrink. Check the warnings above."}
-        </div>
+      <div style={{ fontWeight: 600, color: 'var(--warn)', marginBottom: '0.25rem', fontSize: '0.85rem' }}>
+        ⚠ {warnings.length} debt{warnings.length > 1 ? 's need' : ' needs'} attention
+      </div>
+      <div style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', lineHeight: 1.6 }}>
+        {warnings.length === 1
+          ? `${warnings[0].debtName}'s minimum payment doesn't cover monthly interest. Increase it to at least $${warnings[0].requiredMin}/mo.`
+          : "Some minimum payments don't cover monthly interest. These debts will grow instead of shrink. Check the warnings above."}
       </div>
     </div>
   );

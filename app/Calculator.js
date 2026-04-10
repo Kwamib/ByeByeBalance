@@ -43,8 +43,8 @@ function App() {
         <text x="16" y="22" font-family="Arial, sans-serif" font-size="14" font-weight="900" fill="white" text-anchor="middle">BB</text>
         <defs>
           <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
-            <stop offset="100%" style="stop-color:#764ba2;stop-opacity:1" />
+            <stop offset="0%" style="stop-color:#5A7A66;stop-opacity:1" />
+            <stop offset="100%" style="stop-color:#1A2626;stop-opacity:1" />
           </linearGradient>
         </defs>
       </svg>
@@ -111,9 +111,9 @@ function App() {
       id="app-root"
       style={{
         minHeight: '100vh',
-        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+        background: 'var(--bg)',
         padding: '0',
-        fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+        fontFamily: 'var(--font-body)',
         position: 'relative',
       }}
     >

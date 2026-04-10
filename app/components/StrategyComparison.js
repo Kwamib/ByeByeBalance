@@ -1,74 +1,59 @@
 'use client';
 
 import React from 'react';
-import { Snowflake, Mountain, TrendingUp } from 'lucide-react';
 
 export default function StrategyComparison({ comparison, strategy, isMobile }) {
   if (!comparison) return null;
 
   return (
-    <div style={{ background: 'white', borderRadius: '20px', padding: isMobile ? '1rem' : '1.5rem', boxShadow: '0 10px 40px rgba(0,0,0,0.1)' }}>
-      <h3 style={{ marginTop: 0, marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: isMobile ? '1.125rem' : '1.25rem' }}>
-        <TrendingUp size={20} color="#10b981" />
-        Strategy Comparison
-      </h3>
+    <div style={{ background: 'var(--bg-card)', borderRadius: 6, border: '1px solid var(--border)', overflow: 'hidden' }}>
+      <div style={{ padding: '14px 1.5rem', borderBottom: '1px solid var(--border)' }}>
+        <h3 style={{ margin: 0, fontFamily: 'var(--font-display)', fontSize: '1.2rem', fontWeight: 600, letterSpacing: '-0.2px', color: 'var(--text-primary)' }}>
+          Strategy Comparison
+        </h3>
+      </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(2, 1fr)', gap: '1rem', marginBottom: '1rem' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr' }}>
         {/* Snowball */}
-        <div
-          style={{
-            padding: '1rem',
-            background: strategy === 'snowball' ? 'linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%)' : '#f8f9fa',
-            borderRadius: '12px',
-            border: strategy === 'snowball' ? '2px solid #3b82f6' : '1px solid #e9ecef',
-          }}
-        >
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
-            <Snowflake size={20} color="#3b82f6" />
-            <span style={{ fontWeight: '600', color: '#1e40af' }}>Snowball Method</span>
+        <div style={{
+          padding: '1rem 1.25rem',
+          background: strategy === 'snowball' ? 'var(--sage-light)' : 'var(--bg)',
+          borderRight: isMobile ? 'none' : '1px solid var(--border)',
+          borderBottom: isMobile ? '1px solid var(--border)' : 'none',
+        }}>
+          <div style={{ fontSize: '0.6rem', fontWeight: 600, letterSpacing: '1.5px', textTransform: 'uppercase', color: strategy === 'snowball' ? 'var(--sage-dark)' : 'var(--text-muted)', marginBottom: 6 }}>
+            Snowball
           </div>
-          <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#1e40af' }}>
+          <div style={{ fontSize: '1.35rem', fontWeight: 600, color: strategy === 'snowball' ? 'var(--sage-dark)' : 'var(--text-primary)', fontVariantNumeric: 'tabular-nums' }}>
             ${Math.round(comparison.snowball.interest).toLocaleString()}
           </div>
-          <div style={{ fontSize: '0.75rem', color: '#3b82f6' }}>
-            Total interest • {comparison.snowball.months} months
+          <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', marginTop: 3 }}>
+            {comparison.snowball.months} months • Total interest
           </div>
         </div>
 
         {/* Avalanche */}
-        <div
-          style={{
-            padding: '1rem',
-            background: strategy === 'avalanche' ? 'linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%)' : '#f8f9fa',
-            borderRadius: '12px',
-            border: strategy === 'avalanche' ? '2px solid #22c55e' : '1px solid #e9ecef',
-          }}
-        >
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
-            <Mountain size={20} color="#16a34a" />
-            <span style={{ fontWeight: '600', color: '#14532d' }}>Avalanche Method</span>
+        <div style={{
+          padding: '1rem 1.25rem',
+          background: strategy === 'avalanche' ? 'var(--sage-light)' : 'var(--bg)',
+        }}>
+          <div style={{ fontSize: '0.6rem', fontWeight: 600, letterSpacing: '1.5px', textTransform: 'uppercase', color: strategy === 'avalanche' ? 'var(--sage-dark)' : 'var(--text-muted)', marginBottom: 6 }}>
+            Avalanche
           </div>
-          <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#14532d' }}>
+          <div style={{ fontSize: '1.35rem', fontWeight: 600, color: strategy === 'avalanche' ? 'var(--sage-dark)' : 'var(--text-primary)', fontVariantNumeric: 'tabular-nums' }}>
             ${Math.round(comparison.avalanche.interest).toLocaleString()}
           </div>
-          <div style={{ fontSize: '0.75rem', color: '#16a34a' }}>
-            Total interest • {comparison.avalanche.months} months
+          <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', marginTop: 3 }}>
+            {comparison.avalanche.months} months • Total interest
           </div>
         </div>
       </div>
 
       {/* Savings callout */}
       {comparison.difference.interest > 0 && (
-        <div style={{ padding: '1rem', background: 'linear-gradient(135deg, #fef3c7 0%, #fde68a 100%)', borderRadius: '12px', border: '1px solid #fbbf24' }}>
-          <div style={{ fontSize: '0.875rem', color: '#78350f' }}>
-            <strong>💰 Avalanche saves you:</strong>{' '}
-            <span style={{ fontSize: '1.125rem', fontWeight: 'bold', color: '#16a34a' }}>
-              ${Math.round(comparison.difference.interest).toLocaleString()}
-            </span>{' '}in interest
-            {comparison.difference.months > 0 && (
-              <span> and <strong>{comparison.difference.months} months</strong> of payments</span>
-            )}!
-          </div>
+        <div style={{ padding: '10px 1.5rem', background: 'var(--bg)', borderTop: '1px solid var(--border)', fontSize: '0.78rem', color: 'var(--text-secondary)', lineHeight: 1.6 }}>
+          Avalanche saves <strong style={{ color: 'var(--sage-dark)' }}>${Math.round(comparison.difference.interest).toLocaleString()}</strong> more in interest
+          {comparison.difference.months > 0 && (<span> and <strong>{comparison.difference.months} months</strong></span>)}.
         </div>
       )}
     </div>

@@ -3,12 +3,11 @@
 import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Calculator } from 'lucide-react';
 
 const NAV_ITEMS = [
-  { href: '/', label: '💰 Debt Payoff' },
-  { href: '/mortgage', label: '🏠 Mortgage' },
-  { href: '/qualify', label: '📋 Qualify' },
+  { href: '/', label: 'Debt Payoff' },
+  { href: '/mortgage', label: 'Mortgage' },
+  { href: '/qualify', label: 'Qualify' },
 ];
 
 export default function Header({ onCalculate, isMobile }) {
@@ -17,67 +16,60 @@ export default function Header({ onCalculate, isMobile }) {
   return (
     <header
       style={{
-        background: 'rgba(255, 255, 255, 0.95)',
-        backdropFilter: 'blur(10px)',
-        borderBottom: '1px solid rgba(255, 255, 255, 0.2)',
-        padding: isMobile ? '0.75rem 1rem' : '0.75rem 2rem',
+        background: 'var(--bg)',
+        borderBottom: '1px solid var(--border)',
+        padding: isMobile ? '0 1rem' : '0 2rem',
         position: 'sticky',
         top: 0,
         zIndex: 100,
-        boxShadow: '0 2px 20px rgba(0, 0, 0, 0.1)',
       }}
       className="no-print"
     >
       <div
         style={{
-          maxWidth: '1400px',
+          maxWidth: 1400,
           margin: '0 auto',
           display: 'flex',
+          alignItems: 'stretch',
           justifyContent: 'space-between',
-          alignItems: 'center',
+          gap: '1rem',
           flexWrap: isMobile ? 'wrap' : 'nowrap',
-          gap: isMobile ? '0.75rem' : '0',
         }}
       >
-        {/* Logo */}
-        <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', textDecoration: 'none' }}>
-          <div
-            style={{
-              background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-              borderRadius: '12px',
-              width: 40,
-              height: 40,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-          >
-            <span style={{ color: 'white', fontWeight: 900, fontSize: 14, fontFamily: "Georgia, 'Times New Roman', serif", letterSpacing: -1 }}>BB</span>
-          </div>
+        <Link
+          href="/"
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            textDecoration: 'none',
+            padding: isMobile ? '14px 0' : '16px 0',
+            flexShrink: 0,
+          }}
+        >
           <span
             style={{
-              fontSize: isMobile ? '1.15rem' : '1.35rem',
-              fontWeight: 900,
-              background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              backgroundClip: 'text',
+              fontFamily: 'var(--font-display)',
+              fontWeight: 600,
+              fontSize: isMobile ? '1.2rem' : '1.4rem',
+              letterSpacing: '-0.3px',
+              color: 'var(--text-primary)',
             }}
           >
-            ByeByeBalance
+            Bye<span style={{ color: 'var(--sage)' }}>Bye</span>Balance
           </span>
         </Link>
 
-        {/* Navigation */}
-        <nav style={{
-          display: 'flex',
-          background: '#f1f5f9',
-          borderRadius: '12px',
-          padding: '3px',
-          order: isMobile ? 3 : 0,
-          width: isMobile ? '100%' : 'auto',
-        }}>
-          {NAV_ITEMS.map(item => {
+        <nav
+          style={{
+            display: 'flex',
+            alignItems: 'stretch',
+            order: isMobile ? 3 : 0,
+            width: isMobile ? '100%' : 'auto',
+            borderLeft: isMobile ? 'none' : '1px solid var(--border)',
+            borderTop: isMobile ? '1px solid var(--border)' : 'none',
+          }}
+        >
+          {NAV_ITEMS.map((item) => {
             const isActive = pathname === item.href;
             return (
               <Link
@@ -85,15 +77,19 @@ export default function Header({ onCalculate, isMobile }) {
                 href={item.href}
                 style={{
                   flex: isMobile ? 1 : 'none',
-                  padding: isMobile ? '0.5rem 0.5rem' : '0.5rem 1.25rem',
-                  borderRadius: '10px',
-                  background: isActive ? 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' : 'transparent',
-                  color: isActive ? 'white' : '#64748b',
-                  fontWeight: 600,
-                  fontSize: isMobile ? '0.75rem' : '0.85rem',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  padding: isMobile ? '12px 8px' : '0 1.5rem',
+                  fontSize: '0.8rem',
+                  fontWeight: 500,
+                  letterSpacing: '0.2px',
+                  color: isActive ? 'var(--text-primary)' : 'var(--text-muted)',
                   textDecoration: 'none',
-                  textAlign: 'center',
-                  transition: 'all 0.2s',
+                  borderBottom: isActive ? '2px solid var(--text-primary)' : '2px solid transparent',
+                  borderRight: isMobile ? 'none' : '1px solid var(--border)',
+                  transition: 'color 0.15s',
+                  whiteSpace: 'nowrap',
                 }}
               >
                 {item.label}
@@ -102,27 +98,26 @@ export default function Header({ onCalculate, isMobile }) {
           })}
         </nav>
 
-        {/* CTA Button */}
         {onCalculate && (
-          <button
-            onClick={onCalculate}
-            style={{
-              padding: '0.6rem 1.25rem',
-              background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
-              color: 'white',
-              border: 'none',
-              borderRadius: '10px',
-              fontWeight: '600',
-              cursor: 'pointer',
-              display: isMobile ? 'none' : 'flex',
-              alignItems: 'center',
-              gap: '0.5rem',
-              fontSize: '0.9rem',
-            }}
-          >
-            <Calculator size={16} />
-            Calculate
-          </button>
+          <div style={{ display: 'flex', alignItems: 'center', flexShrink: 0 }}>
+            <button
+              onClick={onCalculate}
+              style={{
+                padding: '8px 18px',
+                background: 'var(--text-primary)',
+                color: 'var(--bg)',
+                border: 'none',
+                borderRadius: 4,
+                fontFamily: 'var(--font-body)',
+                fontWeight: 500,
+                fontSize: '0.8rem',
+                cursor: 'pointer',
+                display: isMobile ? 'none' : 'block',
+              }}
+            >
+              Calculate
+            </button>
+          </div>
         )}
       </div>
     </header>
