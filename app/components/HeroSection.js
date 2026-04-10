@@ -1,45 +1,78 @@
 'use client';
 
 import React from 'react';
-import { Shield, DollarSign, Calculator } from 'lucide-react';
 
 export default function HeroSection({ isMobile }) {
   return (
     <div
       style={{
-        maxWidth: '1400px',
-        margin: isMobile ? '1rem auto' : '2rem auto',
-        padding: isMobile ? '0 1rem' : '0 2rem',
-        textAlign: 'center',
-        color: 'white',
+        maxWidth: 1400,
+        margin: '0 auto',
+        padding: isMobile ? '2rem 1rem 1.5rem' : '3rem 2rem 2rem',
       }}
       className="no-print"
     >
-      <h2 style={{ fontSize: isMobile ? '1.75rem' : '2.5rem', fontWeight: '800', marginBottom: '1rem' }}>
-        Calculate Your Path to Financial Freedom
-      </h2>
-      <p style={{ fontSize: isMobile ? '1rem' : '1.2rem', opacity: 0.95, marginBottom: '1.5rem' }}>
-        Compare proven strategies and see exactly when you{"'"}ll be debt-free
+      <div style={{ fontSize: '0.65rem', fontWeight: 600, letterSpacing: '2px', textTransform: 'uppercase', color: 'var(--sage)', marginBottom: '0.75rem' }}>
+        Debt Payoff Calculator
+      </div>
+      <h1
+        style={{
+          fontFamily: 'var(--font-display)',
+          fontSize: isMobile ? '2.75rem' : '3.75rem',
+          fontWeight: 600,
+          lineHeight: 1.0,
+          letterSpacing: '-1.5px',
+          color: 'var(--text-primary)',
+          margin: 0,
+        }}
+      >
+        Your clear path<br />
+        to <em style={{ fontStyle: 'italic', color: 'var(--sage)' }}>financial</em><br />
+        <em style={{ fontStyle: 'italic', color: 'var(--sage)' }}>freedom.</em>
+      </h1>
+      <p
+        style={{
+          fontSize: isMobile ? '0.9rem' : '1rem',
+          fontWeight: 300,
+          color: 'var(--text-secondary)',
+          lineHeight: 1.6,
+          marginTop: '1rem',
+          marginBottom: 0,
+          maxWidth: 420,
+        }}
+      >
+        Compare proven strategies and see exactly when you&apos;ll be debt-free — down to the month.
       </p>
+
+      {/* Trust badges */}
       <div
         style={{
           display: 'flex',
-          flexDirection: isMobile ? 'column' : 'row',
-          gap: isMobile ? '0.5rem' : '2rem',
-          justifyContent: 'center',
-          fontSize: '0.9rem',
-          opacity: 0.9,
+          alignItems: 'center',
+          gap: 0,
+          marginTop: '1.5rem',
+          border: '1px solid var(--border)',
+          borderRadius: 5,
+          overflow: 'hidden',
+          width: 'fit-content',
         }}
       >
-        <span style={{ display: 'flex', alignItems: 'center', justifyContent: isMobile ? 'center' : 'flex-start', gap: '0.5rem' }}>
-          <Shield size={16} />100% Private
-        </span>
-        <span style={{ display: 'flex', alignItems: 'center', justifyContent: isMobile ? 'center' : 'flex-start', gap: '0.5rem' }}>
-          <DollarSign size={16} />Forever Free
-        </span>
-        <span style={{ display: 'flex', alignItems: 'center', justifyContent: isMobile ? 'center' : 'flex-start', gap: '0.5rem' }}>
-          <Calculator size={16} />No Account Required
-        </span>
+        {['🔒 Private', '$ Free', '✓ No Login'].map((label, i) => (
+          <div
+            key={i}
+            style={{
+              padding: '8px 16px',
+              fontSize: '0.75rem',
+              fontWeight: 500,
+              color: 'var(--text-secondary)',
+              background: 'var(--bg-card)',
+              borderRight: i < 2 ? '1px solid var(--border)' : 'none',
+              whiteSpace: 'nowrap',
+            }}
+          >
+            {label}
+          </div>
+        ))}
       </div>
     </div>
   );

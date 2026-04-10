@@ -2,129 +2,174 @@
 
 import React from 'react';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-import { Share2, FileText, AlertCircle } from 'lucide-react';
+
+const CHART_COLORS = ['#7A9E87', '#4A6FA5', '#C0714A', '#4A5A5A', '#5A7A66', '#8A9A9A'];
+
+function StatCell({ label, value, sub, color }) {
+  return (
+    <div style={{ padding: '1rem 1.25rem' }}>
+      <div style={{ fontSize: '0.6rem', fontWeight: 600, letterSpacing: '1.5px', textTransform: 'uppercase', color: 'var(--text-muted)', marginBottom: 5 }}>{label}</div>
+      <div style={{ fontSize: '1.35rem', fontWeight: 600, color: color || 'var(--text-primary)', fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.3px', lineHeight: 1 }}>{value}</div>
+      {sub && <div style={{ fontSize: '0.68rem', color: 'var(--text-muted)', marginTop: 4 }}>{sub}</div>}
+    </div>
+  );
+}
+
+function fmtMo(m) {
+  if (!isFinite(m) || m >= 600) return '50+ years';
+  if (m < 12) return `${m} mo`;
+  const y = Math.floor(m / 12), r = m % 12;
+  return r > 0 ? `${y}y ${r}m` : `${y}y`;
+}
 
 export default function Results({ results, extraPayment, isMobile, onShare, onExportPDF, onDownloadCSV }) {
   if (!results) return null;
 
+  const fmt = (v) => '$' + Math.round(v).toLocaleString();
+  const fmtK = (v) => v >= 1000 ? '$' + Math.round(v / 1000) + 'K' : fmt(v);
+
   return (
-    <div style={{ background: 'white', borderRadius: '20px', padding: isMobile ? '1rem' : '1.5rem', boxShadow: '0 10px 40px rgba(0,0,0,0.1)' }}>
-      {/* Header with actions */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-        <h3 style={{ margin: 0, fontSize: isMobile ? '1.125rem' : '1.25rem' }}>Your Debt Freedom Plan</h3>
-        {!isMobile && (
-          <div style={{ display: 'flex', gap: '0.5rem' }}>
-            <button onClick={onExportPDF} style={{ padding: '0.5rem 1rem', background: 'white', border: '1px solid #dee2e6', borderRadius: '6px', color: '#495057', cursor: 'pointer', fontSize: '0.875rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              <FileText size={14} /> PDF
-            </button>
-            <button onClick={onShare} style={{ padding: '0.5rem 1rem', background: 'white', border: '1px solid #dee2e6', borderRadius: '6px', color: '#495057', cursor: 'pointer', fontSize: '0.875rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              <Share2 size={14} /> Share
-            </button>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+      {/* Freedom Plan */}
+      <div style={{ background: 'var(--bg-card)', borderRadius: 6, border: '1px solid var(--border)', overflow: 'hidden' }}>
+        <div style={{ padding: '14px 1.5rem', background: 'var(--success-light)', borderBottom: '1px solid var(--border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <h3 style={{ margin: 0, fontFamily: 'var(--font-display)', fontSize: '1.35rem', fontWeight: 600, color: 'var(--sage-dark)', letterSpacing: '-0.2px' }}>
+            Your Debt Freedom Plan
+          </h3>
+          {!isMobile && (
+            <div style={{ display: 'flex', gap: 6 }}>
+              <button onClick={onExportPDF} style={{ padding: '4px 10px', background: 'var(--bg)', border: '1px solid var(--border)', borderRadius: 4, fontSize: '0.7rem', color: 'var(--text-muted)', cursor: 'pointer', fontWeight: 500, fontFamily: 'var(--font-body)' }}>PDF</button>
+              <button onClick={onShare} style={{ padding: '4px 10px', background: 'var(--bg)', border: '1px solid var(--border)', borderRadius: 4, fontSize: '0.7rem', color: 'var(--text-muted)', cursor: 'pointer', fontWeight: 500, fontFamily: 'var(--font-body)' }}>Share</button>
+            </div>
+          )}
+        </div>
+
+        {/* Metrics */}
+        <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr 1fr', borderBottom: '1px solid var(--border)' }}>
+          <StatCell
+            label="Debt-Free Date"
+            value={results.debtFreeDate.toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}
+            sub={`${results.totalMonths} months`}
+            color="var(--sage-dark)"
+          />
+          <div style={{ borderLeft: isMobile ? 'none' : '1px solid var(--border)', borderRight: isMobile ? 'none' : '1px solid var(--border)', borderTop: isMobile ? '1px solid var(--border)' : 'none' }}>
+            <StatCell label="Total Interest" value={fmt(results.totalInterest)} color="var(--warn)" />
+          </div>
+          <div style={{ borderTop: isMobile ? '1px solid var(--border)' : 'none' }}>
+            <StatCell label="Monthly Payment" value={fmt(results.monthlyPayment)} sub={`incl. ${fmt(extraPayment)} extra`} />
+          </div>
+        </div>
+
+        {/* Savings callout */}
+        {results.interestSaved > 0 && (
+          <div style={{ padding: '14px 1.5rem', fontSize: '0.82rem', color: 'var(--sage-dark)', lineHeight: 1.7, background: 'var(--bg)' }}>
+            Paying ${extraPayment} extra saves <strong>{fmt(results.interestSaved)}</strong> in interest — debt-free <strong>{results.monthsSaved} months sooner</strong>.
           </div>
         )}
       </div>
 
-      {/* Key Metrics */}
-      <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fit, minmax(150px, 1fr))', gap: '1rem', marginBottom: '1.5rem' }}>
-        <div style={{ background: 'linear-gradient(135deg, #10b98115 0%, #05966915 100%)', borderRadius: '12px', padding: '1rem', borderLeft: '3px solid #10b981' }}>
-          <div style={{ fontSize: '0.75rem', color: '#047857', marginBottom: '0.25rem', fontWeight: '600' }}>DEBT-FREE DATE</div>
-          <div style={{ fontSize: '1.25rem', fontWeight: 'bold', color: '#047857' }}>
-            {results.debtFreeDate.toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}
-          </div>
-          <div style={{ fontSize: '0.75rem', color: '#10b981' }}>{results.totalMonths} months</div>
-        </div>
-        <div style={{ background: 'linear-gradient(135deg, #f5990b15 0%, #d9770615 100%)', borderRadius: '12px', padding: '1rem', borderLeft: '3px solid #f59e0b' }}>
-          <div style={{ fontSize: '0.75rem', color: '#92400e', marginBottom: '0.25rem', fontWeight: '600' }}>TOTAL INTEREST</div>
-          <div style={{ fontSize: '1.25rem', fontWeight: 'bold', color: '#92400e' }}>${Math.round(results.totalInterest).toLocaleString()}</div>
-          <div style={{ fontSize: '0.75rem', color: '#f59e0b' }}>Total paid: ${Math.round(results.totalPaid).toLocaleString()}</div>
-        </div>
-        <div style={{ background: 'linear-gradient(135deg, #667eea15 0%, #764ba215 100%)', borderRadius: '12px', padding: '1rem', borderLeft: '3px solid #667eea' }}>
-          <div style={{ fontSize: '0.75rem', color: '#4c1d95', marginBottom: '0.25rem', fontWeight: '600' }}>MONTHLY PAYMENT</div>
-          <div style={{ fontSize: '1.25rem', fontWeight: 'bold', color: '#4c1d95' }}>${Math.round(results.monthlyPayment).toLocaleString()}</div>
-          <div style={{ fontSize: '0.75rem', color: '#667eea' }}>Including ${extraPayment} extra</div>
-        </div>
-      </div>
-
       {/* Chart */}
-      <div style={{ marginBottom: '1.5rem' }}>
-        <h4 style={{ marginBottom: '1rem', fontSize: '0.875rem', color: '#495057' }}>Balance Over Time</h4>
-        <ResponsiveContainer width="100%" height={250}>
+      <div style={{ background: 'var(--bg-card)', borderRadius: 6, border: '1px solid var(--border)', padding: '1.25rem 1.5rem' }}>
+        <h3 style={{ margin: '0 0 1rem', fontFamily: 'var(--font-display)', fontSize: '1.2rem', fontWeight: 600, letterSpacing: '-0.2px' }}>Balance Over Time</h3>
+        <ResponsiveContainer width="100%" height={isMobile ? 200 : 220}>
           <AreaChart data={results.chartData}>
             <defs>
               {results.schedule.map((debt, index) => (
-                <linearGradient key={`gradient-${index}`} id={`gradient${index}`} x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor={`hsl(${260 + index * 40}, 70%, 50%)`} stopOpacity={0.8} />
-                  <stop offset="95%" stopColor={`hsl(${260 + index * 40}, 70%, 50%)`} stopOpacity={0.1} />
+                <linearGradient key={`gradient-${index}`} id={`cg${index}`} x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor={CHART_COLORS[index % CHART_COLORS.length]} stopOpacity={0.25} />
+                  <stop offset="95%" stopColor={CHART_COLORS[index % CHART_COLORS.length]} stopOpacity={0.02} />
                 </linearGradient>
               ))}
             </defs>
-            <CartesianGrid strokeDasharray="3 3" stroke="#dee2e6" />
-            <XAxis dataKey="month" stroke="#495057" fontSize={12} />
-            <YAxis stroke="#495057" fontSize={12} />
-            <Tooltip contentStyle={{ backgroundColor: 'white', border: '1px solid #dee2e6', borderRadius: '8px', fontSize: '12px' }} />
+            <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
+            <XAxis dataKey="month" stroke="#8A9A9A" fontSize={10} />
+            <YAxis stroke="#8A9A9A" fontSize={10} tickFormatter={v => fmtK(v)} />
+            <Tooltip
+              formatter={v => fmt(v)}
+              contentStyle={{ borderRadius: 4, border: '1px solid #D8D3C8', fontSize: 11, fontFamily: 'Outfit', background: '#EFECE4' }}
+            />
             {results.schedule.map((debt, index) => (
-              <Area key={debt.name} type="monotone" dataKey={debt.name} stroke={`hsl(${260 + index * 40}, 70%, 50%)`} fillOpacity={1} fill={`url(#gradient${index})`} strokeWidth={2} stackId="1" />
+              <Area
+                key={debt.name}
+                type="monotone"
+                dataKey={debt.name}
+                stroke={CHART_COLORS[index % CHART_COLORS.length]}
+                fillOpacity={1}
+                fill={`url(#cg${index})`}
+                strokeWidth={2}
+                stackId="1"
+              />
             ))}
           </AreaChart>
         </ResponsiveContainer>
       </div>
 
       {/* Payoff Order */}
-      <div>
-        <h4 style={{ marginBottom: '1rem', fontSize: '0.875rem', color: '#495057' }}>Payoff Order</h4>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-          {results.schedule.map((item, index) => (
+      <div style={{ background: 'var(--bg-card)', borderRadius: 6, border: '1px solid var(--border)', padding: '1.25rem 1.5rem' }}>
+        <h3 style={{ margin: '0 0 0.75rem', fontFamily: 'var(--font-display)', fontSize: '1.2rem', fontWeight: 600, letterSpacing: '-0.2px' }}>Payoff Order</h3>
+
+        {!isMobile && (
+          <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr auto auto auto', padding: '0 10px 8px', fontSize: '0.6rem', fontWeight: 600, letterSpacing: '1.5px', textTransform: 'uppercase', color: 'var(--text-muted)', borderBottom: '1px solid var(--border)', gap: '1rem' }}>
+            <span /><span>Debt</span><span style={{ textAlign: 'right' }}>Balance</span><span style={{ textAlign: 'right' }}>Rate</span><span style={{ textAlign: 'right' }}>Paid Off</span>
+          </div>
+        )}
+
+        {results.schedule.map((item, index) => {
+          const paidDate = new Date(Date.now() + (item.paidOffMonth || results.totalMonths) * 30 * 86400000);
+          return (
             <div
               key={item.name}
               style={{
                 display: 'grid',
-                gridTemplateColumns: isMobile ? '30px 1fr' : '30px 2fr 1fr 1fr 1fr',
-                gap: '0.75rem',
-                padding: '0.75rem',
-                background: index === 0 ? 'linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(16, 185, 129, 0.05) 100%)' : '#f8f9fa',
-                borderRadius: '8px',
-                border: index === 0 ? '1px solid rgba(16, 185, 129, 0.3)' : '1px solid #e9ecef',
+                gridTemplateColumns: isMobile ? '30px 1fr' : 'auto 1fr auto auto auto',
+                gap: isMobile ? '0.5rem' : '1rem',
+                padding: '10px',
+                background: index === 0 ? 'var(--success-light)' : 'var(--bg)',
+                border: '1px solid var(--border)',
+                borderRadius: 4,
+                marginTop: 4,
                 alignItems: 'center',
-                fontSize: '0.875rem',
+                fontSize: '0.82rem',
               }}
             >
-              <div style={{ width: '28px', height: '28px', borderRadius: '50%', background: index === 0 ? 'linear-gradient(135deg, #10b981 0%, #059669 100%)' : 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 'bold', fontSize: '0.75rem' }}>
+              <div style={{ width: 22, height: 22, borderRadius: '50%', background: index === 0 ? 'var(--sage-dark)' : 'var(--text-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--bg)', fontWeight: 700, fontSize: '0.65rem' }}>
                 {item.order}
               </div>
-              <div style={{ fontWeight: '600', color: '#212529' }}>
-                {item.name}
+              <div>
+                <div style={{ fontWeight: 500, color: 'var(--text-primary)' }}>{item.name}</div>
+                <div style={{ fontSize: '0.68rem', color: 'var(--text-muted)' }}>Interest: ${item.interestPaid.toLocaleString()}</div>
                 {isMobile && (
-                  <div style={{ fontSize: '0.7rem', color: '#6c757d', marginTop: '0.25rem' }}>
-                    ${Math.round(item.originalBalance).toLocaleString()} • {item.rate}% • ${Math.round(item.interestPaid).toLocaleString()} interest
+                  <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', marginTop: 2 }}>
+                    ${Math.round(item.originalBalance).toLocaleString()} • {item.rate}% • {fmtMo(item.paidOffMonth)}
                   </div>
                 )}
               </div>
               {!isMobile && (
                 <>
-                  <div style={{ color: '#6c757d' }}>${Math.round(item.originalBalance).toLocaleString()}</div>
-                  <div style={{ color: '#f59e0b', fontWeight: '600' }}>{item.rate}%</div>
-                  <div style={{ color: item.interestPaid > 1000 ? '#dc2626' : '#16a34a', fontWeight: '600' }}>${Math.round(item.interestPaid).toLocaleString()}</div>
+                  <div style={{ color: 'var(--text-muted)', fontVariantNumeric: 'tabular-nums', textAlign: 'right' }}>${Math.round(item.originalBalance).toLocaleString()}</div>
+                  <div style={{ color: 'var(--warn)', fontWeight: 600, fontVariantNumeric: 'tabular-nums', textAlign: 'right' }}>{item.rate}%</div>
+                  <div style={{ textAlign: 'right' }}>
+                    <div style={{ fontWeight: 600, color: 'var(--sage-dark)', fontSize: '0.78rem' }}>{fmtMo(item.paidOffMonth)}</div>
+                    <div style={{ fontSize: '0.65rem', color: 'var(--text-muted)' }}>{paidDate.toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}</div>
+                  </div>
                 </>
               )}
             </div>
-          ))}
-        </div>
+          );
+        })}
 
-        {/* Mobile share/export */}
+        {/* Mobile export buttons */}
         {isMobile && (
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '0.5rem', marginTop: '1rem' }}>
-            <button onClick={onShare} style={{ padding: '0.75rem', background: 'white', border: '2px solid #e9ecef', borderRadius: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', cursor: 'pointer', fontSize: '0.875rem' }}><Share2 size={16} /> Share</button>
-            <button onClick={onDownloadCSV} style={{ padding: '0.75rem', background: 'white', border: '2px solid #e9ecef', borderRadius: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', cursor: 'pointer', fontSize: '0.875rem' }}><FileText size={16} /> Export</button>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem', marginTop: '0.75rem' }}>
+            <button onClick={onShare} style={{ padding: '0.6rem', background: 'var(--bg)', border: '1px solid var(--border)', borderRadius: 4, fontSize: '0.78rem', cursor: 'pointer', fontFamily: 'var(--font-body)', color: 'var(--text-secondary)' }}>Share</button>
+            <button onClick={onDownloadCSV} style={{ padding: '0.6rem', background: 'var(--bg)', border: '1px solid var(--border)', borderRadius: 4, fontSize: '0.78rem', cursor: 'pointer', fontFamily: 'var(--font-body)', color: 'var(--text-secondary)' }}>Export CSV</button>
           </div>
         )}
+      </div>
 
-        {/* Disclaimer */}
-        <div style={{ marginTop: '1rem', padding: '0.75rem', background: 'rgba(156, 163, 175, 0.1)', borderRadius: '8px', borderLeft: '3px solid #9ca3af' }}>
-          <div style={{ fontSize: '0.75rem', color: '#6b7280', fontStyle: 'italic' }}>
-            <AlertCircle size={14} style={{ display: 'inline', marginRight: '0.25rem', verticalAlign: 'text-bottom' }} />
-            * Calculations do not include late fees, annual fees, or variable rate changes. For educational purposes only.
-          </div>
-        </div>
+      {/* Disclaimer */}
+      <div style={{ padding: '10px 14px', background: 'var(--bg)', border: '1px solid var(--border)', borderRadius: 4, fontSize: '0.72rem', color: 'var(--text-muted)', fontStyle: 'italic', lineHeight: 1.5 }}>
+        * Calculations do not include late fees, annual fees, or variable rate changes. For educational purposes only.
       </div>
     </div>
   );
