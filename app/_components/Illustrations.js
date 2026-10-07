@@ -53,27 +53,40 @@ export function CoinsArt() {
   );
 }
 
-export function ScaleArt() {
+export function ScaleArt({ animate = false }) {
+  const tag = (x, w, text, fill, color) => (
+    <g>
+      <rect x={x - w / 2} y="100" width={w} height="17" rx="3" fill={fill} />
+      <text x={x} y="111.8" textAnchor="middle" fontSize="8.6" fontWeight="600" letterSpacing=".6" fill={color} fontFamily="Inter Variable, system-ui, sans-serif">{text}</text>
+    </g>
+  );
+  const pan = (cx, weightFill, weightTop, cls) => (
+    <g className={cls}>
+      <path d={`M${cx} 38 L${cx - 19} 76 M${cx} 38 L${cx + 19} 76`} stroke="#2b3a4a" strokeWidth="1.3" />
+      <rect x={cx - 13} y="69" width="26" height="7" rx="1.5" fill={weightFill} />
+      <rect x={cx - 9} y="62.5" width="18" height="6.5" rx="1.5" fill={weightTop} />
+      <path d={`M${cx - 23} 76h46c-2 6-10 9-23 9s-21-3-23-9Z`} fill="#2b3a4a" />
+    </g>
+  );
   return (
-    <svg viewBox="0 0 280 130" preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false">
+    <svg viewBox="0 0 280 130" preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false" className={animate ? 'scale-art animate' : 'scale-art'}>
       <defs>
         <linearGradient id="scbg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#e9f3ec" /><stop offset="1" stopColor="#dcebe1" /></linearGradient>
       </defs>
       <rect width="280" height="130" fill="url(#scbg)" />
-      <ellipse cx="140" cy="113" rx="70" ry="6" fill="#c8dccf" />
-      <rect x="137" y="22" width="6" height="86" fill="#2b3a4a" />
-      <path d="M118 110h44l-6-8h-32Z" fill="#2b3a4a" />
-      <circle cx="140" cy="20" r="5" fill="#2b3a4a" />
-      <path d="M78 30 202 24" stroke="#2b3a4a" strokeWidth="3.5" strokeLinecap="round" />
-      <path d="M84 30l-10 30M84 30l10 30M196 24l-10 30M196 24l10 30" stroke="#2b3a4a" strokeWidth="1.4" />
-      <rect x="68" y="58" width="32" height="7" rx="2" fill="#5b6876" />
-      <rect x="71" y="51" width="26" height="8" rx="2" fill="#6f7c8a" />
-      <rect x="180" y="52" width="32" height="7" rx="2" fill="#3c9a6c" />
-      <rect x="183" y="45" width="26" height="8" rx="2" fill="#56b082" />
-      <rect x="20" y="70" width="88" height="24" rx="3" fill="#fff" />
-      <text x="64" y="86" textAnchor="middle" fontSize="11" fontWeight="600" fill="#1d2735" fontFamily="Inter Variable, system-ui, sans-serif">SNOWBALL</text>
-      <rect x="166" y="70" width="94" height="24" rx="3" fill="#7cc097" />
-      <text x="213" y="86" textAnchor="middle" fontSize="11" fontWeight="600" fill="#0f3d27" fontFamily="Inter Variable, system-ui, sans-serif">AVALANCHE</text>
+      <ellipse cx="140" cy="122" rx="62" ry="4" fill="#c8dccf" />
+      <path d="M124 121h32l-5-7h-22Z" fill="#2b3a4a" />
+      <rect x="137.5" y="34" width="5" height="81" rx="1.5" fill="#2b3a4a" />
+      <g className="scale-beam">
+        <rect x="76" y="34.5" width="128" height="4" rx="2" fill="#2b3a4a" />
+        <circle cx="80" cy="38" r="2.6" fill="#2b3a4a" />
+        <circle cx="200" cy="38" r="2.6" fill="#2b3a4a" />
+      </g>
+      {pan(80, '#5b6876', '#76838f', 'scale-pan-left')}
+      {pan(200, '#2f8f62', '#4fae80', 'scale-pan-right')}
+      <circle cx="140" cy="31" r="5" fill="#2b3a4a" />
+      {tag(80, 70, 'SNOWBALL', '#ffffff', '#1d2735')}
+      {tag(200, 74, 'AVALANCHE', '#7cc097', '#0f3d27')}
     </svg>
   );
 }
