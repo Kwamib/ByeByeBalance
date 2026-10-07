@@ -1,72 +1,27 @@
-# ByeByeBalance – Next.js Migration
+# ByeByeBalance
 
-Free debt payoff calculator migrated from Create React App to Next.js for SEO and performance.
+Free, open-source debt payoff planner: [byebyebalance.com](https://www.byebyebalance.com). No sign-up; every calculation runs in the browser and saved plans stay in local storage.
 
-## What Changed
+## Features
+- **Debt planner** (`/planner`): avalanche or snowball, freed payments roll to the next debt, payoff month, strategy comparison, monthly schedule, CSV export and print.
+- **Calculators**: extra payment, credit card payoff, snowball vs. avalanche, debt-free date.
+- **Home buying**: mortgage payment with taxes, insurance, mortgage insurance and HOA (`/mortgage`); affordability ratios with no approval claims (`/affordability`; `/qualify` redirects here).
+- **My progress**: monthly balance check-ins and history, stored on the device.
+- **Guides**: snowball vs. avalanche, extra payments, a monthly payoff habit.
 
-| Before (CRA)                    | After (Next.js)                         |
-| -------------------------------- | --------------------------------------- |
-| `react-scripts`                  | `next`                                  |
-| `react-router-dom` for routing   | File-based routing (`app/` directory)   |
-| Empty HTML shell (no SEO)        | Server-rendered HTML (full SEO)         |
-| No sitemap or robots.txt         | Auto-generated sitemap + robots.txt     |
-| Meta tags in `index.html` only   | Per-page metadata with Open Graph       |
-| No structured data               | JSON-LD for rich search results         |
+## Calculations
+All finance logic lives in `lib/finance/` (pure functions, no React):
+- `debtPlan.js`: fixed monthly budget (minimums + extra). Each month interest accrues (APR/12), minimums are paid (capped at what's owed), and the rest goes to debts in strategy order, cascading when a debt is cleared. No payment is ever raised or invented; impossible plans return an error.
+- `amortization.js`, `mortgage.js`, `affordability.js`, `dates.js` (month-safe), `money.js` (rounding model).
 
-## What Didn't Change
+Tests in `__tests__/` use independently computed reference values.
 
-- All calculator logic (Calculator.js) — identical math
-- All styling — same inline styles
-- All UI components — same look and feel
-- localStorage persistence — still works
-- Share/Export/Print features — still work
-
-## Getting Started
-
+## Develop
 ```bash
 npm install
-npm run dev
+npm run dev     # http://localhost:3000
+npm test
+npm run build
 ```
 
-Open [http://localhost:3000](http://localhost:3000).
-
-## Deploy to Vercel
-
-This is a standard Next.js app. On Vercel:
-
-1. Push this repo to GitHub
-2. Import in Vercel dashboard (or connect existing project)
-3. Vercel auto-detects Next.js — no config needed
-4. Deploy
-
-## Project Structure
-
-```
-app/
-├── layout.js          # Root layout + global SEO metadata
-├── globals.css        # Global styles
-├── page.js            # Homepage (server component)
-├── Calculator.js      # Calculator (client component - your main app)
-├── JsonLd.js          # Structured data for search engines
-├── sitemap.js         # Auto-generated sitemap.xml
-├── robots.js          # Auto-generated robots.txt
-├── privacy/
-│   ├── page.js        # Privacy page metadata
-│   └── PrivacyContent.js  # Privacy content (client component)
-└── contact/
-    ├── page.js        # Contact page metadata
-    └── ContactContent.js  # Contact content (client component)
-```
-
-## Future: AI Coach API Route
-
-When ready, add `app/api/chat/route.js` for the AI coach backend:
-
-```js
-// app/api/chat/route.js
-export async function POST(request) {
-  const { message, debtData } = await request.json();
-  // Call Claude API here
-  // Return coaching response
-}
-```
+Next.js App Router, deployed on Vercel.

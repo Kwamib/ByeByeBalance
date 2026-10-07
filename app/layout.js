@@ -1,30 +1,21 @@
+import '@fontsource-variable/source-serif-4';
+import '@fontsource-variable/inter';
 import './globals.css';
+import SiteHeader from './_components/SiteHeader';
+import SiteFooter from './_components/SiteFooter';
 
 export const metadata = {
+  metadataBase: new URL('https://www.byebyebalance.com'),
   title: {
-    default: 'ByeByeBalance – Free Debt Payoff Calculator | Snowball & Avalanche',
+    default: 'ByeByeBalance: A Clearer Path to Debt-Free | Free Debt Payoff Planner',
     template: '%s | ByeByeBalance',
   },
-  description:
-    'Free debt payoff calculator. Compare Snowball vs Avalanche strategies, see your debt-free date, and create a personalized payoff plan. No sign-up required. 100% private.',
-  keywords: [
-    'debt payoff calculator',
-    'debt snowball calculator',
-    'debt avalanche calculator',
-    'pay off debt fast',
-    'debt free calculator',
-    'debt elimination',
-    'debt repayment plan',
-    'credit card payoff calculator',
-    'student loan payoff calculator',
-    'free debt calculator',
-  ],
-  authors: [{ name: 'ByeByeBalance' }],
-  creator: 'ByeByeBalance',
+  description: 'Compare debt payoff strategies, see what extra payments change, and build a plan that works for you. Free, no sign-up; your data stays in your browser.',
+  applicationName: 'ByeByeBalance',
+  manifest: '/manifest.json',
   openGraph: {
-    title: 'ByeByeBalance – Free Debt Payoff Calculator',
-    description:
-      'Compare Snowball vs Avalanche strategies and see exactly when you\'ll be debt-free. Free, private, no sign-up.',
+    title: 'ByeByeBalance: A clearer path to debt-free',
+    description: 'Compare payoff strategies, see what extra payments change, and build a plan that works for you. Free, no sign-up.',
     url: 'https://www.byebyebalance.com',
     siteName: 'ByeByeBalance',
     locale: 'en_US',
@@ -32,36 +23,21 @@ export const metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'ByeByeBalance – Free Debt Payoff Calculator',
-    description:
-      'Compare Snowball vs Avalanche strategies and see exactly when you\'ll be debt-free.',
+    title: 'ByeByeBalance: A clearer path to debt-free',
+    description: 'Compare payoff strategies and see what extra payments change. Free, no sign-up.',
   },
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-      'max-video-preview': -1,
-      'max-image-preview': 'large',
-      'max-snippet': -1,
-    },
-  },
-  alternates: {
-    canonical: 'https://www.byebyebalance.com',
-  },
+  robots: { index: true, follow: true },
 };
+
+export const viewport = { themeColor: '#ffffff' };
 
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <head>
-        <meta name="theme-color" content="#F5F2EC" />
-        <link rel="apple-touch-icon" href="/logo192.png" />
-        <link rel="manifest" href="/manifest.json" />
-      </head>
-      <body style={{ margin: 0, padding: 0 }}>
-        {children}
+      <body>
+        <SiteHeader />
+        <main id="main">{children}</main>
+        <SiteFooter />
       </body>
     </html>
   );

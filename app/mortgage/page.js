@@ -1,10 +1,11 @@
-import MortgagePage from '../components/MortgagePage';
+import HomeCalc from '../_components/HomeCalc';
 
 export const metadata = {
-  title: 'Mortgage Calculator - ByeByeBalance',
-  description: 'See the real cost of your mortgage. Calculate total interest, compare terms, and discover how extra payments save you tens of thousands.',
+  title: 'Mortgage Payment Calculator with Taxes, Insurance and HOA',
+  description: 'See the full monthly picture: principal and interest, property taxes, home insurance, mortgage insurance and HOA fees.',
+  alternates: { canonical: '/mortgage' },
 };
 
 export default function Page() {
-  return <MortgagePage />;
+  return <HomeCalc />;
 }

@@ -1,33 +1,73 @@
-import CalculatorWrapper from './CalculatorWrapper';
+import Link from 'next/link';
 import JsonLd from './JsonLd';
+import HeroCard from './HeroCard';
+import { ToolCards, GuideCards, HomeCards, PageTitle, SectionIntro } from './_components/Cards';
+import { Arrow } from './_components/Icons';
+import { CalendarArt } from './_components/Illustrations';
+
+export const metadata = { alternates: { canonical: '/' } };
 
 export default function Home() {
   return (
     <>
       <JsonLd />
-      {/* SEO-friendly static content that Google can always read */}
-      <noscript>
-        <div style={{ padding: '2rem', maxWidth: '800px', margin: '0 auto', fontFamily: 'sans-serif' }}>
-          <h1>ByeByeBalance – Free Debt Payoff Calculator</h1>
-          <p>
-            ByeByeBalance is a free debt payoff calculator that helps you compare
-            the Snowball and Avalanche debt repayment strategies. See your
-            debt-free date, calculate total interest paid, and create a
-            personalized payoff plan.
-          </p>
-          <h2>Features</h2>
-          <ul>
-            <li>Compare Debt Snowball vs Debt Avalanche strategies</li>
-            <li>Calculate your exact debt-free date</li>
-            <li>See how extra payments accelerate your payoff</li>
-            <li>Export your plan as CSV or print it</li>
-            <li>100% private – all data stays in your browser</li>
-            <li>Completely free – no sign-up required</li>
-          </ul>
-          <p>Please enable JavaScript to use the interactive calculator.</p>
+      <PageTitle title="A clearer path to debt-free." sub="Compare payoff strategies, see what extra payments change, and build a plan that works for you.">
+        <div className="row">
+          <Link className="button" href="/planner">Build my payoff plan <Arrow /></Link>
+          <Link className="button secondary" href="/calculators">Explore calculators</Link>
         </div>
-      </noscript>
-      <CalculatorWrapper />
+        <div className="trust-row">
+          <span>Free to use</span><span>No bank connection required</span><span>Saved only on your device</span>
+        </div>
+      </PageTitle>
+
+      <HeroCard />
+
+      <section>
+        <SectionIntro title="Start with the question on your mind">
+          <p>Small questions, clearer next steps. Each calculator takes a minute and shows its assumptions.</p>
+        </SectionIntro>
+        <div style={{ marginTop: 24 }}><ToolCards /></div>
+      </section>
+
+      <div className="band">
+        <div className="band-inner">
+          <div>
+            <h2>Your plan. Your pace.</h2>
+            <p style={{ fontSize: 17 }}>Add your debts, compare strategies, and record your balances each month to see how far you&rsquo;ve come.</p>
+            <Link className="button" href="/progress">Explore my progress <Arrow /></Link>
+          </div>
+          <div className="card" style={{ display: 'grid', gridTemplateColumns: '150px 1fr', gap: 16, alignItems: 'center' }}>
+            <div style={{ width: 150 }}><CalendarArt /></div>
+            <div>
+              <h3 style={{ fontSize: 21, margin: '0 0 6px' }}>A monthly check-in</h3>
+              <p style={{ margin: 0 }}>Keep your latest balances and a history of your progress in one place.</p>
+              <div className="progress-bar"><i style={{ width: '48%' }} /></div>
+              <span className="note">Illustrative progress preview</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <section>
+        <SectionIntro title="Make room for your next move">
+          <p>See what a home could cost each month, and how your existing debt affects your budget.</p>
+        </SectionIntro>
+        <div style={{ marginTop: 24 }}><HomeCards /></div>
+      </section>
+
+      <section>
+        <SectionIntro title="Practical guides for your next step" />
+        <div style={{ marginTop: 20 }}><GuideCards /></div>
+      </section>
+
+      <section>
+        <div className="card mint cta-card">
+          <h2>You don&rsquo;t need a perfect plan to start.</h2>
+          <p>A few details can give you a direction forward.</p>
+          <Link className="button" href="/planner">Create my payoff plan <Arrow /></Link>
+        </div>
+      </section>
     </>
   );
 }
