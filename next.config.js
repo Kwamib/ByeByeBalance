@@ -1,7 +1,12 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Enable React strict mode for better development experience
   reactStrictMode: true,
+  async redirects() {
+    return [
+      // "Do I qualify?" became "Can I afford this home?" (no approval claims)
+      { source: '/qualify', destination: '/affordability', permanent: true },
+    ];
+  },
 };
 
 module.exports = nextConfig;

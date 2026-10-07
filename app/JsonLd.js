@@ -5,7 +5,7 @@ export default function JsonLd() {
     name: 'ByeByeBalance',
     url: 'https://www.byebyebalance.com',
     description:
-      'Free debt payoff calculator. Compare Snowball vs Avalanche strategies, see your debt-free date, and create a personalized payoff plan.',
+      'Free debt payoff planner. Compare snowball and avalanche, see your debt-free date and build a month-by-month plan.',
     applicationCategory: 'FinanceApplication',
     operatingSystem: 'Any',
     offers: {
@@ -14,13 +14,12 @@ export default function JsonLd() {
       priceCurrency: 'USD',
     },
     featureList: [
-      'Debt Snowball Calculator',
-      'Debt Avalanche Calculator',
-      'Strategy Comparison',
-      'Debt-Free Date Projection',
-      'Interest Savings Calculator',
-      'Export to CSV',
-      'Print Payoff Plan',
+      'Debt snowball and avalanche planner',
+      'Custom payoff order',
+      'Debt-free date projection',
+      'Extra payment calculator',
+      'Month-by-month schedule with CSV export',
+      'Mortgage payment and affordability calculators',
     ],
   };
 
