@@ -26,7 +26,7 @@ export default async function Page({ params }) {
         <Link href="/guides">All guides</Link>
         <h1 style={{ marginTop: 14 }}>{g.title}</h1>
         <p style={{ fontSize: 20 }}>{g.intro}</p>
-        {Art && <div className="guide-hero"><Art /></div>}
+        {Art && <div className="guide-hero"><Art animate /></div>}
         {g.parts.map(([h, p]) => (
           <div key={h}><h2>{h}</h2><p>{p}</p></div>
         ))}
