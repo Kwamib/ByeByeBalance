@@ -298,3 +298,14 @@ td,th{padding:11px 12px}
 @media(max-width:560px){.tool-cards{grid-template-columns:1fr}.home-card{grid-template-columns:1fr}}
 section.article{padding:44px 32px 24px}.article h1{font-size:44px}
 a.home-card{display:grid}a.tool-card,a.guide-card{display:flex}
+/* guide banners: keep the illustration's own proportions (no cropping) */
+.article .guide-hero{height:auto;aspect-ratio:280/130;max-height:320px;background:#e6f1e9}
+.guide-card .guide-img{height:auto;aspect-ratio:280/130}
+/* optional one-time "settle" on the scale (off for reduced motion) */
+.scale-art.animate .scale-beam{transform-box:view-box;transform-origin:140px 36.5px;animation:beam-settle 2.4s cubic-bezier(.3,.6,.3,1) .3s both}
+.scale-art.animate .scale-pan-left{animation:pan-left 2.4s cubic-bezier(.3,.6,.3,1) .3s both}
+.scale-art.animate .scale-pan-right{animation:pan-right 2.4s cubic-bezier(.3,.6,.3,1) .3s both}
+@keyframes beam-settle{0%{transform:rotate(-5deg)}35%{transform:rotate(3deg)}60%{transform:rotate(-1.5deg)}80%{transform:rotate(.6deg)}100%{transform:rotate(0)}}
+@keyframes pan-left{0%{transform:translateY(5px)}35%{transform:translateY(-3px)}60%{transform:translateY(1.6px)}80%{transform:translateY(-.6px)}100%{transform:translateY(0)}}
+@keyframes pan-right{0%{transform:translateY(-5px)}35%{transform:translateY(3px)}60%{transform:translateY(-1.6px)}80%{transform:translateY(.6px)}100%{transform:translateY(0)}}
+@media(prefers-reduced-motion:reduce){.scale-art.animate .scale-beam,.scale-art.animate .scale-pan-left,.scale-art.animate .scale-pan-right{animation:none}}
