@@ -146,7 +146,7 @@ header{max-width:1240px;padding:18px 32px;border-bottom:1px solid var(--line);ba
 .site-header-wrap header{border-bottom:0}
 .brand{display:inline-flex;align-items:center;gap:8px;font:700 31px/1 var(--serif);color:var(--ink);letter-spacing:-.01em}
 .brand:hover{text-decoration:none}
-.brand svg{width:32px;height:32px;flex:none}
+
 header nav{display:flex;gap:6px;align-items:center;margin-right:auto;margin-left:36px}
 header nav a,.nav-trigger{color:var(--ink);font:400 15px var(--sans);padding:8px 12px;border-radius:6px;background:none;border:0;min-height:0;display:inline-flex;align-items:center;gap:6px;cursor:pointer}
 .nav-trigger:hover,header nav a:hover{background:#f1f3f2;text-decoration:none;filter:none}
@@ -220,7 +220,7 @@ input:focus,select:focus{outline:2px solid #137b5755;outline-offset:1px;border-c
 /* footer */
 footer{max-width:1180px;border-top:1px solid var(--line);padding:22px 32px 30px;display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:24px}
 footer .brand{font-size:21px}
-footer .brand svg{width:22px;height:22px}
+
 footer .footer-links{display:flex;gap:40px;justify-content:center;font-size:13px}
 footer .footer-links a{color:#2a3446}
 footer p{width:auto;font-size:12px;color:#4d566b}
@@ -309,3 +309,16 @@ a.home-card{display:grid}a.tool-card,a.guide-card{display:flex}
 @keyframes pan-left{0%{transform:translateY(5px)}35%{transform:translateY(-3px)}60%{transform:translateY(1.6px)}80%{transform:translateY(-.6px)}100%{transform:translateY(0)}}
 @keyframes pan-right{0%{transform:translateY(-5px)}35%{transform:translateY(3px)}60%{transform:translateY(-1.6px)}80%{transform:translateY(.6px)}100%{transform:translateY(0)}}
 @media(prefers-reduced-motion:reduce){.scale-art.animate .scale-beam,.scale-art.animate .scale-pan-left,.scale-art.animate .scale-pan-right{animation:none}}
+
+/* ---- waving-hand logo ---- */
+.brand{gap:9px}
+.logo-hand{position:relative;display:inline-block;width:30px;height:30px;flex:none}
+.logo-hand svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+footer .brand .logo-hand{width:22px;height:22px}
+/* rotate the whole hand element around the wrist (15,29 of a 32 box) */
+.logo-hand .hand{transform-origin:47% 91%;transform:rotate(-8deg)}
+.logo-hand .hand.wave{animation:hand-wave 1.2s ease-in-out 1 both}
+@keyframes hand-wave{0%{transform:rotate(-8deg)}20%{transform:rotate(12deg)}40%{transform:rotate(-16deg)}60%{transform:rotate(10deg)}80%{transform:rotate(-12deg)}100%{transform:rotate(-8deg)}}
+@media(max-width:760px){.brand .logo-hand{width:26px;height:26px}}
+@media(prefers-reduced-motion:reduce){.logo-hand .hand.wave{animation:none}}
+@media print{.logo-hand .hand.wave{animation:none}}
