@@ -9,6 +9,7 @@ export default function SiteFooter() {
         <Link href="/calculators">Calculators</Link>
         <Link href="/guides">Guides</Link>
         <Link href="/planner">My plan</Link>
+        <Link href="/budget">Budget</Link>
         <Link href="/about">About</Link>
         <Link href="/privacy">Privacy</Link>
       </div>
