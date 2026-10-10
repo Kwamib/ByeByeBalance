@@ -3,7 +3,8 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
-import { Leaf, Chevron } from './Icons';
+import { Chevron } from './Icons';
+import { BrandLink } from './Logo';
 import { GUIDES } from '../../lib/guides';
 
 const CALCULATORS = [
@@ -57,7 +58,7 @@ export default function SiteHeader() {
   return (
     <header ref={ref}>
       <a className="skip" href="#main">Skip to content</a>
-      <Link className="brand" href="/"><Leaf />ByeByeBalance</Link>
+      <BrandLink />
       <nav aria-label="Main navigation">
         <Menu id="calcs" label="Calculators" active={inCalcs} open={open} setOpen={setOpen}>
           {CALCULATORS.map(group => (

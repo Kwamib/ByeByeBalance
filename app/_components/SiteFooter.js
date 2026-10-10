@@ -1,10 +1,10 @@
 import Link from 'next/link';
-import { Leaf } from './Icons';
+import { HandMark } from './Logo';
 
 export default function SiteFooter() {
   return (
     <footer>
-      <Link className="brand" href="/"><Leaf />ByeByeBalance</Link>
+      <Link className="brand" href="/"><HandMark />ByeByeBalance</Link>
       <div className="footer-links">
         <Link href="/calculators">Calculators</Link>
         <Link href="/guides">Guides</Link>
