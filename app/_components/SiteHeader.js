@@ -74,6 +74,7 @@ export default function SiteHeader() {
           <Link href="/guides" style={{ fontWeight: 600 }}>All guides</Link>
         </Menu>
         <Link href="/planner" className={inPlan ? 'active' : undefined} aria-current={inPlan ? 'page' : undefined}>My plan</Link>
+        <Link href="/budget" className={path.startsWith('/budget') ? 'active' : undefined} aria-current={path.startsWith('/budget') ? 'page' : undefined}>Budget</Link>
       </nav>
       <span className="pill">Free. No sign-up.</span>
     </header>

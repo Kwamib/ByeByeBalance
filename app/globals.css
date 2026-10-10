@@ -322,3 +322,91 @@ footer .brand .logo-hand{width:22px;height:22px}
 @media(max-width:760px){.brand .logo-hand{width:26px;height:26px}}
 @media(prefers-reduced-motion:reduce){.logo-hand .hand.wave{animation:none}}
 @media print{.logo-hand .hand.wave{animation:none}}
+
+/* ---- monthly budget ---- */
+.budget-note{display:flex;flex-wrap:wrap;gap:8px 16px;justify-content:center;align-items:center;font-size:14px;color:var(--muted);margin:2px 32px 0}
+.saved-dot{color:var(--green-text);font-weight:500}
+.saved-dot::before{content:'';display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--green);margin-right:6px;vertical-align:1px}
+.budget-notices{max-width:760px;margin:12px auto 0;padding:0 32px;display:grid;gap:8px}
+.budget-grid{align-items:start}
+.budget-steps{display:grid;gap:16px}
+.budget-step h2{font-size:24px;margin:0 0 16px;display:flex;align-items:baseline;gap:12px}
+.step-num{font:600 15px var(--sans);color:var(--green-text);letter-spacing:.04em}
+.step-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap}
+.step-head h2{margin-bottom:12px}
+.budget-rows{display:grid;gap:10px;margin-bottom:14px}
+.budget-row{display:grid;grid-template-columns:1fr 150px 40px;gap:10px;align-items:start}
+.budget-row .field{margin:0}
+.row-name{min-height:44px}
+.row-static{display:flex;align-items:center;gap:10px;min-height:44px;padding:0 4px;color:var(--ink);font-weight:500}
+.tag{font:500 11.5px var(--sans);color:var(--green-text);background:var(--mint-strong);border-radius:20px;padding:3px 9px;white-space:nowrap}
+.row-remove{min-height:44px;padding:0;background:#f2f5f4;color:#55606e;border:1px solid var(--line);font-size:18px;font-weight:400}
+.row-remove:hover{background:#fbeeee;color:#963e45;border-color:#e8cdd0}
+.money-input{display:flex;align-items:center;border:1px solid var(--input-line);border-radius:4px;background:#fff;min-height:44px}
+.money-input:focus-within{outline:2px solid #137b5755;outline-offset:1px;border-color:var(--green)}
+.money-input[data-invalid=true]{border-color:#a02d32}
+.money-input span{padding-left:12px;color:var(--muted)}
+.money-input input{border:0;min-height:42px;padding:10px 12px 10px 6px;outline:none!important;font-variant-numeric:tabular-nums}
+.money-input input[readonly]{background:transparent;color:var(--ink)}
+.budget-step > .budget-money{max-width:280px;margin:0}
+.import-preview{border:1px solid var(--mint-line);background:var(--mint);border-radius:8px;padding:14px 16px;margin-bottom:14px}
+.import-choice{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;font-weight:400;padding:6px 0;margin:0}
+.import-choice input{width:18px;height:18px;min-height:0;accent-color:var(--green)}
+.budget-side{display:grid;gap:16px}
+.card p.snapshot-total{font:700 52px/1.05 var(--sans);letter-spacing:-.02em;color:var(--green-text);margin:6px 0 6px;font-variant-numeric:tabular-nums}
+.card p.snapshot-total.is-short{color:#a02d32}
+.snapshot-sub{margin:0 0 6px;font-size:15.5px}
+.snapshot-hint{margin:6px 0 0;color:#7a4a00}
+.budget-bar{display:flex;height:14px;border-radius:8px;overflow:hidden;background:#e6efea;margin:18px 0 10px}
+.budget-bar i{height:100%;transition:width .25s}
+.budget-legend{list-style:none;padding:0;margin:0 0 14px;display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12.5px;color:#3d4656}
+.budget-legend .dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:6px}
+.snapshot-table{font-size:15px;margin-bottom:18px}
+.snapshot-table th{text-transform:none;letter-spacing:0;font:400 15px var(--sans);color:var(--ink);text-align:left;padding:11px 0}
+.snapshot-table td{text-align:right;font-weight:600;color:var(--ink);padding:11px 0;font-variant-numeric:tabular-nums}
+.snapshot-table tr.total th,.snapshot-table tr.total td{font-weight:700;border-bottom:0;padding-top:13px}
+.purpose{padding-bottom:16px}
+.purpose .budget-money{margin-bottom:8px}
+.export-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.export-grid button{min-height:44px;font-size:14.5px}
+.print-only{display:none}
+@media(max-width:560px){.budget-row{grid-template-columns:1fr 120px 40px}.card p.snapshot-total{font-size:44px}.export-grid{grid-template-columns:1fr}}
+@media(prefers-reduced-motion:reduce){.budget-bar i{transition:none}}
+@media print{
+  .print-only{display:block}
+  .print-summary{padding:0 0 12px;border-bottom:1px solid #ccc;margin-bottom:12px}
+  .print-summary h1{font-size:28px;margin:8px 0 2px}
+  .print-brand{font-size:20px}
+  .print-brand .logo-hand{width:22px;height:22px}
+  .page-title,.budget-note{display:none!important}
+  .budget-grid{grid-template-columns:1fr 1fr!important;padding:0!important;gap:14px}
+  .budget-side{position:static}
+  .card{padding:12px 14px;box-shadow:none}
+  .money-input{border:0}
+  .row-remove,.tag{display:none}
+}
+/* budget: phone layout + pinned total */
+.mobile-total{display:none}
+@media(max-width:900px){
+  .budget-row{grid-template-columns:1fr 44px;grid-template-areas:"name name" "amt rm"}
+  .budget-row > .row-name,.budget-row > label + .row-name{grid-area:name}
+  .budget-row > .budget-money{grid-area:amt}
+  .budget-row > .row-remove{grid-area:rm}
+  .budget-rows{gap:14px}
+  .mobile-total{display:flex;position:fixed;left:12px;right:12px;bottom:12px;z-index:15;justify-content:space-between;align-items:center;background:var(--ink);color:#fff;border-radius:10px;padding:12px 16px;font-size:14px;box-shadow:0 10px 24px -12px #0e1a2b99}
+  .mobile-total:hover{text-decoration:none}
+  .mobile-total strong{font-size:18px;color:#9fe0bf}
+  .mobile-total strong.is-short{color:#ffb3b3}
+  footer{padding-bottom:84px}
+}
+@media print{#toast,.mobile-total{display:none!important}}
+/* footer links wrap on small screens (prevents sideways scrolling on phones) */
+@media(max-width:900px){footer .footer-links{flex-wrap:wrap;white-space:normal;gap:10px 22px}}
+/* budget rows on phones: name reads as the row's label */
+@media(max-width:900px){
+  .budget-row{padding-bottom:12px;border-bottom:1px solid var(--line);gap:4px 10px}
+  .budget-row:last-child{border-bottom:0;padding-bottom:0}
+  .budget-row > .row-name{border-color:transparent;background:transparent;padding:4px 0;min-height:30px;font-weight:600;color:var(--ink)}
+  .budget-row > .row-name:focus{border-color:var(--green);padding:4px 8px;background:#fff}
+}
+.grid>*,.calc-grid>*{min-width:0}
