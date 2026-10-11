@@ -6,7 +6,7 @@ const PATHS = [
   ['/calculators/snowball-vs-avalanche', 0.8], ['/calculators/debt-free-date', 0.8],
   ['/home-buying', 0.6], ['/mortgage', 0.7], ['/affordability', 0.7],
   ['/guides', 0.6], ...GUIDES.map(g => [`/guides/${g.slug}`, 0.6]),
-  ['/about', 0.4], ['/privacy', 0.3], ['/contact', 0.3],
+  ['/about', 0.4], ['/privacy', 0.3], ['/terms', 0.2], ['/contact', 0.3],
 ];
 
 export default function sitemap() {
