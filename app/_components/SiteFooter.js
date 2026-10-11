@@ -12,8 +12,10 @@ export default function SiteFooter() {
         <Link href="/budget">Budget</Link>
         <Link href="/about">About</Link>
         <Link href="/privacy">Privacy</Link>
+        <Link href="/terms">Terms</Link>
+        <a href="https://github.com/Kwamib/ByeByeBalance" rel="noopener noreferrer">Source code</a>
       </div>
-      <p>Educational estimates. Actual lender calculations may differ.</p>
+      <p>Educational estimates, not financial advice. Actual lender calculations may differ.</p>
     </footer>
   );
 }

@@ -7,6 +7,7 @@ Free, open-source debt payoff planner: [byebyebalance.com](https://www.byebyebal
 - **Calculators**: extra payment, credit card payoff, snowball vs. avalanche, debt-free date.
 - **Home buying**: mortgage payment with taxes, insurance, mortgage insurance and HOA (`/mortgage`); affordability ratios with no approval claims (`/affordability`; `/qualify` redirects here).
 - **My progress**: monthly balance check-ins and history, stored on the device.
+- **Budget** (`/budget`): income, expenses, debt minimums imported from My plan, savings and surplus, with CSV, backup and print.
 - **Guides**: snowball vs. avalanche, extra payments, a monthly payoff habit.
 
 ## Calculations
@@ -25,3 +26,13 @@ npm run build
 ```
 
 Next.js App Router, deployed on Vercel.
+
+## Security
+See [SECURITY.md](SECURITY.md) to report a problem privately.
+
+## License
+Copyright (C) 2026 Mayowa Babatola.
+
+The code is licensed under the [GNU Affero General Public License v3.0](LICENSE) (AGPL-3.0-only). You may use, change and share it, but if you run a modified version for other people, including as a website, you must make your source code available to them under the same license.
+
+The ByeByeBalance name, logo and guide articles are not covered by the code license. Please use your own name and branding for your version.
