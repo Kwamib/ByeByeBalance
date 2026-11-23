@@ -1,0 +1,86 @@
+{
+  "app": "byebyebalance",
+  "kind": "backup",
+  "version": 1,
+  "exportedAt": "2026-11-01T09:30:00.000Z",
+  "plan": {
+    "plan": {
+      "debts": [
+        {
+          "id": "debt-1",
+          "name": "Visa card",
+          "balance": 4200.5,
+          "rate": 24.99,
+          "minPayment": 120
+        },
+        {
+          "id": "debt-2",
+          "name": "Car loan",
+          "balance": 13800,
+          "rate": 6.4,
+          "minPayment": 310
+        },
+        {
+          "id": "debt-3",
+          "name": "Student loan",
+          "balance": 0,
+          "rate": 4.5,
+          "minPayment": 0
+        }
+      ],
+      "extraPayment": 250,
+      "strategy": "custom",
+      "customOrder": [
+        "debt-2",
+        "debt-1",
+        "debt-3"
+      ]
+    },
+    "history": [
+      {
+        "date": "2026-08-01T12:00:00.000Z",
+        "total": 19400
+      },
+      {
+        "date": "2026-09-01T12:00:00.000Z",
+        "total": 18620.25
+      },
+      {
+        "date": "2026-10-01T12:00:00.000Z",
+        "total": 18000.5
+      }
+    ]
+  },
+  "budget": {
+    "incomeCents": 620000,
+    "savingsCents": 40000,
+    "extraCents": 25000,
+    "expenses": [
+      {
+        "id": "exp-a1-1",
+        "name": "Housing",
+        "cents": 180000
+      },
+      {
+        "id": "exp-a1-2",
+        "name": "Groceries",
+        "cents": 60050
+      }
+    ],
+    "debts": [
+      {
+        "id": "plan-debt-1",
+        "name": "Visa card",
+        "minimumCents": 12000,
+        "imported": true,
+        "sourceId": "debt-1"
+      },
+      {
+        "id": "debt-a1-3",
+        "name": "Phone plan",
+        "minimumCents": 4500,
+        "imported": false
+      }
+    ]
+  }
+}

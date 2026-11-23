@@ -24,7 +24,7 @@ export default function Page() {
       <ClearData />
 
       <h2>Files you download</h2>
-      <p>CSV exports, budget backups and printed or saved PDFs are created in your browser and downloaded straight to your device. They are never uploaded. A backup file contains your plan and budget, so keep it somewhere private. When you restore a backup, the file is read in your browser and checked before anything changes.</p>
+      <p>CSV exports, budget backups and printed or saved PDFs are created in your browser and downloaded straight to your device. They are never uploaded. A backup file contains your plan, check-ins, budget and home-buying numbers, so keep it somewhere private. When you restore a backup, the file is read in your browser and checked before anything changes.</p>
 
       <h2>Hosting</h2>
       <p>The site is hosted on Vercel, which, like any web host, receives standard request information such as IP address, browser type and the page requested when a page loads. That never includes the numbers you enter.</p>
