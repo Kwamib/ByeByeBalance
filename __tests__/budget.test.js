@@ -1,5 +1,6 @@
 import { parseCents, computeBudget, breakdown, importDebts, diffWithPlan, csvCell, budgetCsv } from '../lib/budget';
-import { sanitizeBudget, parseBudget, makeBackup, readBackup, mergeBudgets, MAX_BACKUP_BYTES } from '../lib/budgetStorage';
+import { sanitizeBudget, parseBudget, mergeBudgets } from '../lib/budgetStorage';
+import { makeBackup, readBackup, MAX_BACKUP_BYTES } from '../lib/backup';
 
 describe('parseCents', () => {
   test('accepts dollars, commas, $ and up to two decimals', () => {
@@ -139,7 +140,7 @@ describe('budget storage and backups', () => {
     expect(r.budget).toEqual(budget);
     expect(r.plan.debts[0].name).toBe('Visa');
     expect(r.history).toHaveLength(1);
-    expect(r.summary).toEqual({ debts: 1, checkIns: 1, expenses: 1, budgetDebts: 1 });
+    expect(r.summary).toEqual({ debts: 1, checkIns: 1, expenses: 1, budgetDebts: 1, home: false });
   });
 
   test('corrupted, foreign, future, oversized or empty backups are rejected', () => {

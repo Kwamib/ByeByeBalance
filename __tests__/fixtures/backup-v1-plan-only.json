@@ -1,0 +1,42 @@
+{
+  "app": "byebyebalance",
+  "kind": "backup",
+  "version": 1,
+  "exportedAt": "2026-11-01T09:30:00.000Z",
+  "plan": {
+    "plan": {
+      "debts": [
+        {
+          "id": "debt-1",
+          "name": "Visa card",
+          "balance": 4200.5,
+          "rate": 24.99,
+          "minPayment": 120
+        },
+        {
+          "id": "debt-2",
+          "name": "Car loan",
+          "balance": 13800,
+          "rate": 6.4,
+          "minPayment": 310
+        },
+        {
+          "id": "debt-3",
+          "name": "Student loan",
+          "balance": 0,
+          "rate": 4.5,
+          "minPayment": 0
+        }
+      ],
+      "extraPayment": 250,
+      "strategy": "custom",
+      "customOrder": [
+        "debt-2",
+        "debt-1",
+        "debt-3"
+      ]
+    },
+    "history": []
+  },
+  "budget": null
+}

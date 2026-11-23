@@ -5,7 +5,9 @@ import { useEffect, useMemo, useState } from 'react';
 import { Metric, PageTitle, SectionIntro, GuideCards } from '../_components/Cards';
 import { Arrow } from '../_components/Icons';
 import { useToast } from '../_components/useToast';
+import BackupPanel from '../_components/BackupPanel';
 import { loadPlan, savePlan } from '../../lib/storage';
+import { BACKUP_TIP, noteFirstSave } from '../../lib/backup';
 import { money, toNumber } from '../../lib/format';
 
 export default function ProgressApp() {
@@ -13,11 +15,12 @@ export default function ProgressApp() {
   const [balances, setBalances] = useState({});
   const [toast, toastNode] = useToast();
 
-  useEffect(() => {
+  const load = () => {
     const res = loadPlan();
     setState(res);
-    if (res.record) setBalances(Object.fromEntries(res.record.plan.debts.map(d => [d.id, String(d.balance)])));
-  }, []);
+    setBalances(res.record ? Object.fromEntries(res.record.plan.debts.map(d => [d.id, String(d.balance)])) : {});
+  };
+  useEffect(load, []);
 
   const errors = useMemo(() => Object.fromEntries(
     Object.entries(balances).filter(([, v]) => { const n = toNumber(v); return !Number.isFinite(n) || n < 0; }).map(([id]) => [id, 'Enter a balance of $0 or more.'])
@@ -39,7 +42,8 @@ export default function ProgressApp() {
     const plan = { ...record.plan, debts: nextDebts };
     if (savePlan(plan, nextHistory)) {
       setState({ status: 'saved', record: { ...record, plan, history: nextHistory } });
-      toast('Saved on this device');
+      if (noteFirstSave()) toast(BACKUP_TIP, 8000);
+      else toast('Saved on this device');
     } else toast('Device storage is unavailable. Keep this tab open.');
   };
 
@@ -102,6 +106,10 @@ export default function ProgressApp() {
           <Link href="/planner" className="button secondary block">Edit my payoff plan</Link>
         </div>
       </div>
+      <section className="no-print" style={{ paddingTop: 8 }}>
+        <BackupPanel onRestored={load} toast={toast} />
+      </section>
+
       <section style={{ paddingTop: 8 }}>
         <SectionIntro title="Keep your plan useful">
           <p>A short monthly routine keeps your estimates connected to what actually happened. Your plan and check-ins stay in this browser and don&rsquo;t sync to other devices.</p>

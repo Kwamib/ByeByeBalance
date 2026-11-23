@@ -6,8 +6,10 @@ import { PageTitle, Metric } from '../_components/Cards';
 import { Arrow } from '../_components/Icons';
 import { HandMark } from '../_components/Logo';
 import { useToast } from '../_components/useToast';
+import BackupPanel from '../_components/BackupPanel';
 import { parseCents, computeBudget, breakdown, importDebts, diffWithPlan, budgetCsv } from '../../lib/budget';
-import { BUDGET_KEY, EMPTY_BUDGET, loadBudget, saveBudget, makeBackup, readBackup, mergeBudgets, writePlanRecord } from '../../lib/budgetStorage';
+import { BUDGET_KEY, loadBudget, saveBudget } from '../../lib/budgetStorage';
+import { BACKUP_TIP, noteFirstSave } from '../../lib/backup';
 import { PLAN_KEY, loadPlan, savePlan, sanitizePlan } from '../../lib/storage';
 import { downloadText } from '../../lib/exportCsv';
 
@@ -77,11 +79,9 @@ export default function BudgetApp() {
   const [saveState, setSaveState] = useState(''); // '' | saved | error message
   const [plan, setPlan] = useState(null); // saved plan record from My plan
   const [picker, setPicker] = useState(null); // { selected: Set } while choosing debts to import
-  const [restore, setRestore] = useState(null); // validated backup awaiting confirmation
   const [otherTab, setOtherTab] = useState(false);
   const [toast, toastNode] = useToast();
   const touched = useRef(false);
-  const fileRef = useRef(null);
 
   const refreshPlan = useCallback(() => setPlan(loadPlan().record), []);
 
@@ -120,9 +120,10 @@ export default function BudgetApp() {
     const t = setTimeout(() => {
       const r = saveBudget(parsed.budget);
       setSaveState(r === 'ok' ? 'saved' : r === 'full' ? 'Couldn’t save: this browser’s storage is full.' : 'Couldn’t save on this device.');
+      if (r === 'ok' && noteFirstSave()) toast(BACKUP_TIP, 8000);
     }, 400);
     return () => clearTimeout(t);
-  }, [parsed, ready, storage]);
+  }, [parsed, ready, storage, toast]);
 
   // Flush a pending save if the tab is hidden or closed before the debounce fires.
   const latest = useRef(null);
@@ -177,24 +178,14 @@ export default function BudgetApp() {
     else toast('Couldn’t update My plan on this device.');
   };
 
-  const onBackupFile = async e => {
-    const file = e.target.files?.[0];
-    e.target.value = '';
-    if (!file) return;
-    const res = readBackup(await file.text(), file.size);
-    if (!res.ok) { toast(res.error); return; }
-    setRestore(res);
-  };
-  const applyRestore = mode => {
-    const r = restore;
-    if (r.plan && (mode === 'replace' || !plan)) writePlanRecord(r.plan, r.history);
-    if (r.budget) {
-      const next = mode === 'merge' ? mergeBudgets(parsed.budget, r.budget) : r.budget;
-      if (saveBudget(next) === 'ok') setDraft(toDraft(next));
-    }
+  // Backups use the budget on screen; if it has invalid amounts, fall back to the saved budget.
+  const backupBudget = () => (parsed.ok && !isBlank(draft) ? parsed.budget : loadBudget().budget || null);
+  const onRestored = () => {
+    const res = loadBudget();
+    if (res.budget) setDraft(toDraft(res.budget));
+    setStorage(res.status === 'unavailable' ? 'unavailable' : res.status === 'corrupt' ? 'corrupt' : 'ok');
+    setOtherTab(false);
     refreshPlan();
-    setRestore(null);
-    toast(mode === 'merge' ? 'Backup merged' : 'Backup restored');
   };
 
   const shortfall = totals.surplusCents < 0;
@@ -357,31 +348,15 @@ export default function BudgetApp() {
 
           <div className="card no-print">
             <h3>Keep your plan handy</h3>
-            <p>Print your monthly overview, or save a backup file to bring your plan and budget to another device.</p>
+            <p>Print your monthly overview, or download it to open in a spreadsheet.</p>
             <div className="export-grid">
               <button type="button" onClick={() => window.print()}>Print / Save PDF</button>
               <button type="button" className="secondary" onClick={() => downloadText(`byebyebalance-budget-${today.toISOString().slice(0, 10)}.csv`, budgetCsv(parsed.budget, totals, today))} disabled={!parsed.ok}>Download CSV</button>
-              <button type="button" className="secondary" onClick={() => downloadText(`byebyebalance-backup-${today.toISOString().slice(0, 10)}.json`, makeBackup({ planRecord: plan, budget: parsed.ok ? parsed.budget : null }), 'application/json')}>Export backup</button>
-              <button type="button" className="secondary" onClick={() => fileRef.current?.click()}>Import backup</button>
-              <input ref={fileRef} type="file" accept="application/json,.json" hidden onChange={onBackupFile} />
             </div>
-            {restore && (
-              <div className="import-preview" style={{ marginTop: 14 }}>
-                <p style={{ margin: '0 0 6px', fontWeight: 600, color: 'var(--ink)' }}>Restore this backup?</p>
-                <p className="note" style={{ margin: '0 0 10px' }}>
-                  {restore.exportedAt ? `Saved ${new Date(restore.exportedAt).toLocaleDateString()}. ` : ''}
-                  {restore.summary.debts} debts and {restore.summary.checkIns} check-ins in My plan; {restore.summary.expenses} expenses and {restore.summary.budgetDebts} debt payments in the budget.
-                </p>
-                <p className="note"><strong>Replace</strong> swaps your current plan and budget for the backup. <strong>Merge</strong> keeps what you have and adds rows that aren’t here yet.</p>
-                <div className="row">
-                  <button type="button" className="small" onClick={() => applyRestore('replace')}>Replace</button>
-                  <button type="button" className="secondary small" onClick={() => applyRestore('merge')}>Merge</button>
-                  <button type="button" className="secondary small" onClick={() => setRestore(null)}>Cancel</button>
-                </div>
-              </div>
-            )}
-            <p className="note" style={{ marginTop: 12, marginBottom: 0 }}>CSV opens in Excel or Google Sheets. Print uses your browser’s print dialog. Backups stay on your device until you move them.</p>
+            <p className="note" style={{ marginTop: 12, marginBottom: 0 }}>CSV opens in Excel or Google Sheets. Print uses your browser’s print dialog.</p>
           </div>
+
+          <BackupPanel getBudget={backupBudget} onRestored={onRestored} toast={toast} />
         </div>
       </div>
 

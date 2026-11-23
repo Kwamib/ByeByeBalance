@@ -6,6 +6,7 @@ import BalanceChart from './BalanceChart';
 import { Metric, PageTitle, SectionIntro, GuideCards } from './Cards';
 import { Arrow } from './Icons';
 import { useToast } from './useToast';
+import BackupPanel from './BackupPanel';
 import { simulatePlan } from '../../lib/finance/debtPlan';
 import { addMonths } from '../../lib/finance/dates';
 import { displayBalance } from '../../lib/finance/money';
@@ -13,6 +14,7 @@ import { pointsFrom } from '../../lib/chartSeries';
 import { toDraft, parseDraft, newDebtId } from '../../lib/planDraft';
 import { SAMPLE_PLAN } from '../../lib/sampleData';
 import { loadPlan, savePlan } from '../../lib/storage';
+import { BACKUP_TIP, noteFirstSave } from '../../lib/backup';
 import { scheduleCsv, downloadText } from '../../lib/exportCsv';
 import { money, monthShort, yrMo } from '../../lib/format';
 
@@ -25,11 +27,12 @@ export default function Planner({ compare = false }) {
   const [history, setHistory] = useState([]);
   const [toast, toastNode] = useToast();
 
-  useEffect(() => {
+  const load = () => {
     const { status, record } = loadPlan();
     if (record) { setDraft(toDraft(record.plan)); setHistory(record.history || []); }
     setSource(record ? status : status === 'none' ? 'sample' : status);
-  }, []);
+  };
+  useEffect(load, []);
 
   const parsed = useMemo(() => parseDraft(draft), [draft]);
   const ready = source !== 'loading';
@@ -58,7 +61,12 @@ export default function Planner({ compare = false }) {
     if (!parsed.ok) { toast('Fix the highlighted fields before saving.'); return; }
     const total = parsed.plan.debts.reduce((s, d) => s + d.balance, 0);
     const hist = history.length ? history : [{ date: new Date().toISOString(), total }];
-    if (savePlan(parsed.plan, hist)) { setHistory(hist); setSource('saved'); toast('Saved on this device'); }
+    if (savePlan(parsed.plan, hist)) {
+      setHistory(hist);
+      setSource('saved');
+      if (noteFirstSave()) toast(BACKUP_TIP, 8000);
+      else toast('Saved on this device');
+    }
     else toast('Device storage is unavailable. Keep this tab open.');
   };
 
@@ -207,6 +215,10 @@ export default function Planner({ compare = false }) {
             </div>
           </div>
         </div>
+      </section>
+
+      <section className="no-print" style={{ paddingTop: 8 }}>
+        <BackupPanel onRestored={load} toast={toast} />
       </section>
 
       <section style={{ paddingTop: 8 }}>
