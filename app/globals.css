@@ -296,6 +296,12 @@ td,th{padding:11px 12px}
 @media(max-width:1000px){.tool-cards{grid-template-columns:1fr 1fr}.home-cards{grid-template-columns:1fr}}
 @media(max-width:900px){.calc-grid.wide{grid-template-columns:1fr}.band-inner{grid-template-columns:1fr;padding:32px 20px}.debt-entry .fields{grid-template-columns:1fr 1fr}}
 @media(max-width:560px){.tool-cards{grid-template-columns:1fr}.home-card{grid-template-columns:1fr}}
+/* 404 page: centered note and buttons; buttons go full width on phones */
+.not-found-top{max-width:704px;margin:0 auto}
+.not-found-top .notice{display:flex;gap:10px;align-items:flex-start;color:var(--green-text)}
+.not-found-top .notice p{color:var(--ink)}
+.not-found-top .row{justify-content:center;margin-top:22px}
+@media(max-width:560px){.not-found-top .row .button{width:100%}}
 section.article{padding:44px 32px 24px}.article h1{font-size:44px}
 a.home-card{display:grid}a.tool-card,a.guide-card{display:flex}
 /* guide banners: keep the illustration's own proportions (no cropping) */

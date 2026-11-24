@@ -41,3 +41,12 @@ export function Lock({ size = 14 }) {
     </svg>
   );
 }
+
+export function Shield({ size = 18 }) {
+  return (
+    <svg {...iconProps} width={size} height={size} style={{ flex: 'none' }}>
+      <path d="M8 1.8 2.8 3.8v3.9c0 3.1 2.2 5.6 5.2 6.5 3-.9 5.2-3.4 5.2-6.5V3.8L8 1.8Z" {...stroke} />
+      <path d="m5.8 8 1.6 1.6 2.9-3" {...stroke} />
+    </svg>
+  );
+}
